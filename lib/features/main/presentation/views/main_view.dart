@@ -1,0 +1,97 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:madar/core/helper/app_colors.dart';
+import 'package:madar/core/widgets/CustomElevatedButton_widget.dart';
+import 'package:madar/core/widgets/custom_header_widget.dart';
+import 'package:madar/features/home/presentation/widgets/services_section.dart';
+import 'package:madar/features/home/presentation/widgets/about_us_section.dart';
+import 'package:madar/features/home/presentation/widgets/our_work_section.dart';
+import 'package:madar/features/home/presentation/widgets/latest_articles_section.dart';
+import 'package:madar/core/localization/app_localizations.dart';
+import 'package:madar/features/main/presentation/widgets/custom_bottom_nav_bar.dart';
+import 'package:madar/features/services/presentation/views/services_view.dart';
+import 'package:madar/features/projects/presentation/views/projects_view.dart';
+import 'package:madar/features/contact_us/presentation/views/contact_us_view.dart';
+import 'package:madar/features/more/presentation/views/more_view.dart';
+
+class MainView extends StatefulWidget {
+  const MainView({super.key});
+
+  @override
+  State<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends State<MainView> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      const HomeTab(),
+      const ServicesView(),
+      const ProjectsView(),
+      const ContactUsView(),
+      const MoreView(),
+    ];
+
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      body: IndexedStack(index: _selectedIndex, children: pages),
+      bottomNavigationBar: CustomBottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemSelected: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
+    );
+  }
+}
+
+class HomeTab extends StatelessWidget {
+  const HomeTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CustomHeaderWidget(
+            title: 'header_title'.tr(context),
+            subtitle: 'header_subtitle'.tr(context),
+            content: CustomElevatedButton(
+              text: 'contact_us'.tr(context),
+              onPressed: () {},
+            ),
+          ),
+          SizedBox(height: 40.h),
+          const ServicesSection(),
+          SizedBox(height: 40.h),
+          const AboutUsSection(),
+          SizedBox(height: 40.h),
+          const OurWorkSection(),
+          SizedBox(height: 40.h),
+          const LatestArticlesSection(),
+          SizedBox(height: 100.h),
+        ],
+      ),
+    );
+  }
+}
+
+class PlaceholderPage extends StatelessWidget {
+  final String title;
+
+  const PlaceholderPage({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        title,
+        style: const TextStyle(color: AppColors.bgDarkBlue, fontSize: 24),
+      ),
+    );
+  }
+}
