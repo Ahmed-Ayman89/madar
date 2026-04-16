@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import '../../../services/domain/entities/service_entity.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceEntity service;
 
-  const ServiceCard({
-    super.key,
-    required this.service,
-  });
+  const ServiceCard({super.key, required this.service});
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +83,14 @@ class ServiceCard extends StatelessWidget {
                     service.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.setWhite(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                    ).copyWith(
-                      color: Colors.white.withOpacity(0.85),
-                      height: 1.4,
-                    ),
+                    style:
+                        AppTextStyle.setWhite(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                        ).copyWith(
+                          color: Colors.white.withOpacity(0.85),
+                          height: 1.4,
+                        ),
                   ),
                 ],
               ),

@@ -19,8 +19,6 @@ class ServicesSection extends StatelessWidget {
           // Modular Header
           const ServicesHeader(),
 
-          SizedBox(height: 24.h),
-
           // Grid of Services
           BlocBuilder<ServicesCubit, ServicesState>(
             builder: (context, state) {

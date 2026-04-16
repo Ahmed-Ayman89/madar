@@ -16,5 +16,7 @@ abstract class EndPoints {
   static const String adminSeoPages = 'seo-pages/admin';
   static const String blogs = 'blogs';
   static const String services = 'services';
+  static const String projects = 'projects';
+  static const String jobs = 'jobs';
   static const String upload = 'mobile/upload';
 }

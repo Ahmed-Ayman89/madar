@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madar/core/helper/app_colors.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
 import 'article_card.dart';
+import '../../../blogs/presentation/cubit/blog_cubit.dart';
+import '../../../blogs/presentation/cubit/blog_state.dart';
+import '../../../blogs/presentation/views/blogs_view.dart';
 
 class LatestArticlesSection extends StatefulWidget {
   const LatestArticlesSection({super.key});
@@ -16,7 +20,6 @@ class _LatestArticlesSectionState extends State<LatestArticlesSection> {
   final ScrollController _scrollController = ScrollController();
 
   void _scroll(bool forward) {
-    // 220.w (new card width) + 16.w (spacing)
     double cardWidthWithSpacing = 220.w + 16.w;
     double targetOffset = forward
         ? _scrollController.offset + cardWidthWithSpacing
@@ -69,36 +72,70 @@ class _LatestArticlesSectionState extends State<LatestArticlesSection> {
         SizedBox(height: 24.h),
 
         // Carousel with Arrows
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            // Horizontal Scroll
-            SingleChildScrollView(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              clipBehavior: Clip.none,
-              padding: EdgeInsets.symmetric(horizontal: 40.w), // Leave space for arrows
-              child: Row(
+        BlocBuilder<BlogCubit, BlogState>(
+          builder: (context, state) {
+            if (state is BlogLoading || state is BlogInitial) {
+              return SizedBox(
+                height: 350.h,
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            } else if (state is BlogError) {
+              return SizedBox(
+                height: 350.h,
+                child: Center(
+                  child: Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              );
+            } else if (state is BlogsLoaded) {
+              final blogsState = state;
+              if (blogsState.blogs.isEmpty) {
+                return SizedBox(
+                  height: 350.h,
+                  child: Center(child: Text('no_blogs_found'.tr(context))),
+                );
+              }
+              return Stack(
+                alignment: Alignment.center,
                 children: [
-                  const ArticleCard(),
-                  SizedBox(width: 16.w),
-                  const ArticleCard(),
-                  SizedBox(width: 16.w),
-                  const ArticleCard(), // Third for testing scroll
+                  // Horizontal Scroll
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    clipBehavior: Clip.none,
+                    padding: EdgeInsets.symmetric(horizontal: 40.w),
+                    child: Row(
+                      children: blogsState.blogs.take(5).map((blog) {
+                        return Padding(
+                          padding: EdgeInsetsDirectional.only(end: 16.w),
+                          child: ArticleCard(blog: blog),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  // Left Arrow
+                  Positioned(
+                    left: 10.w,
+                    child: _buildArrow(
+                      Icons.arrow_forward_ios,
+                      () => _scroll(true),
+                    ),
+                  ),
+                  // Right Arrow
+                  Positioned(
+                    right: 10.w,
+                    child: _buildArrow(
+                      Icons.arrow_back_ios_new,
+                      () => _scroll(false),
+                    ),
+                  ),
                 ],
-              ),
-            ),
-            // Left Arrow
-            Positioned(
-              left: 10.w,
-              child: _buildArrow(Icons.arrow_forward_ios, () => _scroll(true)),
-            ),
-            // Right Arrow
-            Positioned(
-              right: 10.w,
-              child: _buildArrow(Icons.arrow_back_ios_new, () => _scroll(false)),
-            ),
-          ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
 
         SizedBox(height: 30.h),
@@ -109,7 +146,12 @@ class _LatestArticlesSectionState extends State<LatestArticlesSection> {
             width: 120.w,
             height: 33.h,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const BlogsView()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF259CCB),
                 foregroundColor: Colors.white,
@@ -171,7 +213,7 @@ class _LatestArticlesSectionState extends State<LatestArticlesSection> {
             child: Icon(
               icon,
               size: 14,
-              color: const Color(0xFF9E9E9E), // Lighter grey like reference
+              color: const Color(0xFF9E9E9E),
             ),
           ),
         ),

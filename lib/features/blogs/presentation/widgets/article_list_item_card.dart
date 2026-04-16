@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
-import '../views/blog_details_view.dart';
+import 'package:madar/core/widgets/custom_network_image.dart';
+import '../../domain/entities/blog_entity.dart';
+import 'package:go_router/go_router.dart';
+import 'package:madar/core/routing/routes.dart';
 
 class ArticleListItemCard extends StatelessWidget {
-  const ArticleListItemCard({super.key});
+  final BlogEntity blog;
+  const ArticleListItemCard({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const BlogDetailsView()),
-        );
+        context.push(Routes.kBlogDetailsView, extra: blog.id);
       },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -39,12 +40,19 @@ class ArticleListItemCard extends StatelessWidget {
                 padding: EdgeInsets.all(12.w),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
-                  child: Image.asset(
-                    'assets/photo/onboard2.jpg',
-                    width: double.infinity,
-                    height: 180.h,
-                    fit: BoxFit.cover,
-                  ),
+                  child: blog.imageCover != null
+                      ? CustomNetworkImage(
+                          imageUrl: blog.imageCover!.url,
+                          width: double.infinity,
+                          height: 180.h,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: 180.h,
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.image_not_supported),
+                        ),
                 ),
               ),
               // Text Content
@@ -54,21 +62,25 @@ class ArticleListItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'article_1_title'.tr(context),
+                      blog.title,
                       style: AppTextStyle.setStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: const Color(0xFF1B3D6D),
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      'article_1_desc'.tr(context),
+                      blog.excerpt,
                       style: AppTextStyle.setStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                         color: Colors.black54,
                       ).copyWith(height: 1.5),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 12.h),
                     // Action Row

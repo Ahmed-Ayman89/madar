@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 
-import 'package:madar/core/localization/app_localizations.dart';
-
 class BlogContentSection extends StatelessWidget {
-  const BlogContentSection({super.key});
+  final String content;
+  const BlogContentSection({super.key, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -14,57 +13,7 @@ class BlogContentSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeading('blog_heading_overview'.tr(context)),
-          _buildParagraph(
-            'blog_overview_text'.tr(context),
-          ),
-          SizedBox(height: 30.h),
-          _buildHeading('blog_heading_market'.tr(context)),
-          _buildParagraph(
-            'blog_market_intro'.tr(context),
-          ),
-          SizedBox(height: 16.h),
-          _buildBulletPoint('blog_market_item1'.tr(context)),
-          _buildBulletPoint('blog_market_item2'.tr(context)),
-          _buildBulletPoint('blog_market_item3'.tr(context)),
-          _buildBulletPoint('blog_market_item4'.tr(context)),
-          _buildBulletPoint('blog_market_item5'.tr(context)),
-          SizedBox(height: 40.h),
-          _buildHeading('blog_heading_social'.tr(context)),
-          _buildParagraph(
-            'blog_social_text1'.tr(context),
-          ),
-          SizedBox(height: 30.h),
-          // Side by side images
-          Row(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    'assets/photo/onboard2.jpg',
-                    height: 150.h,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    'assets/photo/onboard3.jpg',
-                    height: 150.h,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 30.h),
-          _buildParagraph(
-            'blog_social_text2'.tr(context),
-          ),
+          _buildParagraph(content),
         ],
       ),
     );

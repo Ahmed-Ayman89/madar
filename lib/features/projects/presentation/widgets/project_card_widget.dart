@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:madar/core/widgets/custom_network_image.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
+import '../../domain/entities/project_entity.dart';
+
+import 'package:go_router/go_router.dart';
+import 'package:madar/core/routing/routes.dart';
 
 class ProjectCardWidget extends StatelessWidget {
-  final String title;
-  final String description;
-  final String imagePath;
-  final String? logoPath;
+  final ProjectEntity project;
 
   const ProjectCardWidget({
     super.key,
-    required this.title,
-    required this.description,
-    required this.imagePath,
-    this.logoPath,
+    required this.project,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 347.w,
+    return InkWell(
+      onTap: () {
+        context.push(Routes.kProjectDetailsView, extra: project.id);
+      },
+      child: Container(
+        width: 347.w,
       height: 445.h,
       margin: EdgeInsets.only(bottom: 24.h),
       decoration: BoxDecoration(
@@ -41,8 +44,8 @@ class ProjectCardWidget extends StatelessWidget {
           // Project Image
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(20.r)),
-            child: Image.asset(
-              imagePath,
+            child: CustomNetworkImage(
+              imageUrl: project.imageUrl,
               width: double.infinity,
               height: 220.h,
               fit: BoxFit.cover,
@@ -56,11 +59,11 @@ class ProjectCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Logo (if available)
-                  if (logoPath != null) ...[
+                  if (project.logoUrl != null) ...[
                     Align(
                       alignment: AlignmentDirectional.centerStart,
-                      child: Image.asset(
-                        logoPath!,
+                      child: CustomNetworkImage(
+                        imageUrl: project.logoUrl!,
                         height: 30.h,
                         fit: BoxFit.contain,
                       ),
@@ -70,7 +73,7 @@ class ProjectCardWidget extends StatelessWidget {
 
                   // Project Title
                   Text(
-                    title,
+                    project.title,
                     style: AppTextStyle.setStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
@@ -83,7 +86,7 @@ class ProjectCardWidget extends StatelessWidget {
 
                   // Project Description
                   Text(
-                    description,
+                    project.description,
                     style: AppTextStyle.setStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w400,
@@ -121,6 +124,7 @@ class ProjectCardWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),
+);
   }
 }

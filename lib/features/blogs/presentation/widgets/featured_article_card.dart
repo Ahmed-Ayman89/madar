@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
+import 'package:madar/core/widgets/custom_network_image.dart';
+import '../../domain/entities/blog_entity.dart';
 
 class FeaturedArticleCard extends StatelessWidget {
-  const FeaturedArticleCard({super.key});
+  final BlogEntity blog;
+  const FeaturedArticleCard({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +31,19 @@ class FeaturedArticleCard extends StatelessWidget {
             // Article Image
             ClipRRect(
               borderRadius: BorderRadius.circular(20.r),
-              child: Image.asset(
-                'assets/photo/onboard1.jpg',
-                width: double.infinity,
-                height: 200.h,
-                fit: BoxFit.cover,
-              ),
+              child: blog.imageCover != null
+                  ? CustomNetworkImage(
+                      imageUrl: blog.imageCover!.url,
+                      width: double.infinity,
+                      height: 200.h,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 200.h,
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.image_not_supported),
+                    ),
             ),
             Padding(
               padding: EdgeInsets.all(16.w),
@@ -40,7 +51,7 @@ class FeaturedArticleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'blog_article_main_title'.tr(context),
+                    blog.title,
                     style: AppTextStyle.setStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
@@ -52,7 +63,7 @@ class FeaturedArticleCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'blog_date'.tr(context),
+                        DateFormat('yyyy-MM-dd').format(blog.createdAt),
                         style: AppTextStyle.setStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
