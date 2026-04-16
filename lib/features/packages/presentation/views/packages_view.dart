@@ -111,15 +111,18 @@ class PackagesView extends StatelessWidget {
                   icon: Icons.bolt,
                 ),
 
-                PackageCardWidget(
-                  title: 'pkg_social_title'.tr(context),
-                  subtitle: 'pkg_social_subtitle'.tr(context),
-                  price: '7000',
-                  features: packageFeatures,
-                  icon: Icons.star_border,
-                  iconColor: const Color(0xFFF59E0B), // Orange star
-                  isHighlighted: true,
-                  badgeText: 'pkg_social_badge'.tr(context),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PackageCardWidget(
+                    title: 'pkg_social_title'.tr(context),
+                    subtitle: 'pkg_social_subtitle'.tr(context),
+                    price: '7000',
+                    features: packageFeatures,
+                    icon: Icons.star_border,
+                    iconColor: const Color(0xFFF59E0B), // Orange star
+                    isHighlighted: true,
+                    badgeText: 'pkg_social_badge'.tr(context),
+                  ),
                 ),
 
                 PackageCardWidget(

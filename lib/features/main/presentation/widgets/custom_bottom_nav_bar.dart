@@ -27,13 +27,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       builder: (context, constraints) {
         double w = constraints.maxWidth;
         double itemWidth = w / 5;
-
-        // Check if current locale is RTL
         final bool isRtl = Directionality.of(context) == TextDirection.rtl;
-
-        // Calculation for center X:
-        // If RTL: Index 0 is rightmost.
-        // If LTR: Index 0 is leftmost.
         double targetX = isRtl
             ? w - ((widget.selectedIndex + 0.5) * itemWidth)
             : (widget.selectedIndex + 0.5) * itemWidth;
@@ -45,7 +39,6 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             clipBehavior: Clip.none,
             alignment: Alignment.bottomCenter,
             children: [
-              // Background scoop (Animated) - NO WHITE BORDER
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(end: targetX),
                 duration: const Duration(milliseconds: 400),
@@ -54,7 +47,14 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                   return CustomPaint(
                     size: Size(w, 100.h),
                     painter: NavBarPainter(
-                      backgroundColor: AppColors.bgDarkBlue,
+                      backgroundColor: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          const Color(0xFF0E1A39),
+                          const Color(0xFF182D62),
+                        ],
+                      ),
                       xCenter: xPos,
                     ),
                   );
@@ -67,11 +67,31 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                 right: 0,
                 child: Row(
                   children: [
-                    _buildItem(0, 'nav_home'.tr(context), 'assets/icon/home.svg'),
-                    _buildItem(1, 'nav_services'.tr(context), 'assets/icon/service.svg'),
-                    _buildItem(2, 'nav_our_work'.tr(context), 'assets/icon/work.svg'),
-                    _buildItem(3, 'nav_contact_us'.tr(context), 'assets/icon/notification.svg'),
-                    _buildItem(4, 'nav_more'.tr(context), 'assets/icon/building.svg'), // Placeholder icon for 'More'
+                    _buildItem(
+                      0,
+                      'nav_home'.tr(context),
+                      'assets/icon/home.svg',
+                    ),
+                    _buildItem(
+                      1,
+                      'nav_services'.tr(context),
+                      'assets/icon/service.svg',
+                    ),
+                    _buildItem(
+                      2,
+                      'nav_our_work'.tr(context),
+                      'assets/icon/work.svg',
+                    ),
+                    _buildItem(
+                      3,
+                      'nav_contact_us'.tr(context),
+                      'assets/icon/notification.svg',
+                    ),
+                    _buildItem(
+                      4,
+                      'nav_more'.tr(context),
+                      'assets/icon/building.svg',
+                    ), // Placeholder icon for 'More'
                   ],
                 ),
               ),
@@ -97,7 +117,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
               curve: Curves.easeInOut,
               width: 50.w,
               height: 50.h,
-              margin: EdgeInsets.only(bottom: isSelected ? 40.h : 0),
+              margin: EdgeInsets.only(bottom: isSelected ? 50.h : 0),
               alignment: Alignment.center,
               decoration: isSelected
                   ? const BoxDecoration(
@@ -105,10 +125,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF182D62),
-                          Color(0xFF0E1A39),
-                        ],
+                        colors: [Color(0xFF182D62), Color(0xFF0E1A39)],
                       ),
                     )
                   : null,
@@ -123,7 +140,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
               ),
             ),
 
-            SizedBox(height: isSelected ? 0 : 5.h),
+            SizedBox(height: isSelected ? 3 : 5.h),
             Text(
               label,
               style: AppTextStyle.caption.copyWith(

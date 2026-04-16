@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:madar/core/network/api_helper.dart';
 import 'core/helper/app_theme.dart';
 import 'core/routing/app_router.dart';
 import 'core/localization/locale_cubit.dart';
@@ -10,6 +11,7 @@ import 'core/localization/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await APIHelper.init();
   runApp(const MyApp());
 }
 

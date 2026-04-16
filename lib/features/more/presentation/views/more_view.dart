@@ -8,6 +8,8 @@ import '../widgets/more_grid_item.dart';
 import '../widgets/more_list_item.dart';
 import 'package:madar/features/about_us/presentation/views/about_us_view.dart';
 import 'package:madar/features/packages/presentation/views/packages_view.dart';
+import 'package:madar/features/careers/presentation/views/careers_view.dart';
+import 'package:madar/features/blogs/presentation/views/blogs_view.dart';
 
 class MoreView extends StatelessWidget {
   const MoreView({super.key});
@@ -43,10 +45,18 @@ class MoreView extends StatelessWidget {
       {
         'title': 'more_articles'.tr(context),
         'imagePath': 'assets/icon/blog.png',
+        'onTap': () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const BlogsView()),
+        ),
       },
       {
         'title': 'more_employment'.tr(context),
         'imagePath': 'assets/icon/Jop.png',
+        'onTap': () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CareersView()),
+        ),
       },
     ];
 

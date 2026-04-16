@@ -1,59 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:madar/core/helper/app_text_style.dart';
+import '../../domain/entities/service_entity.dart';
 
 class ServiceCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final IconData icon;
+  final ServiceEntity service;
 
   const ServiceCard({
     super.key,
-    required this.title,
-    required this.description,
-    required this.icon,
+    required this.service,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF5B7ED7).withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        color: const Color(0xFF142047).withOpacity(0.7),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.15),
+          width: 0.8,
+        ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          /// ICON
-          Align(
-            alignment: AlignmentDirectional.topEnd,
-            child: Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
+          /// ICON CIRCLE
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withOpacity(0.08),
+              border: Border.all(
                 color: Colors.white.withOpacity(0.1),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                width: 0.5,
               ),
-              child: Icon(icon, color: Colors.white, size: 20.sp),
             ),
+            child: service.iconUrl.isNotEmpty &&
+                    service.iconUrl.startsWith('http')
+                ? SvgPicture.network(
+                    service.iconUrl,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                    width: 20.sp,
+                    height: 20.sp,
+                    placeholderBuilder: (_) => Icon(
+                      Icons.miscellaneous_services,
+                      color: Colors.white,
+                      size: 20.sp,
+                    ),
+                  )
+                : Icon(
+                    Icons.miscellaneous_services,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
           ),
 
-          SizedBox(height: 12.h),
+          const Spacer(),
 
           /// TITLE
           Text(
-            title,
+            service.title,
+            textAlign: TextAlign.right,
             style: AppTextStyle.setWhite(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
             maxLines: 1,
@@ -64,12 +79,16 @@ class ServiceCard extends StatelessWidget {
 
           /// DESCRIPTION
           Text(
-            description,
+            service.description,
+            textAlign: TextAlign.right,
             style: AppTextStyle.setWhite(
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: FontWeight.w400,
-            ).copyWith(color: Colors.white.withOpacity(0.8), height: 1.4),
-            maxLines: 4, // Prevent infinite growth
+            ).copyWith(
+              color: Colors.white.withOpacity(0.7),
+              height: 1.5,
+            ),
+            maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
         ],

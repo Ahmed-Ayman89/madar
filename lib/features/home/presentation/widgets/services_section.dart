@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:madar/core/localization/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madar/features/services/presentation/cubit/services_cubit.dart';
+import 'package:madar/features/services/presentation/cubit/services_state.dart';
 import 'services_header.dart';
 import 'service_card.dart';
 
@@ -20,45 +22,42 @@ class ServicesSection extends StatelessWidget {
           SizedBox(height: 24.h),
 
           // Grid of Services
-          GridView.count(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            crossAxisCount: 2,
-            crossAxisSpacing: 10.w,
-            mainAxisSpacing: 10.h,
-            childAspectRatio: 166 / 156,
-            children: [
-              ServiceCard(
-                title: 'web_design'.tr(context),
-                iconPath: 'assets/icon/work.svg',
-                gradientColors: const [Color(0xFF5A7899), Color(0xFF3A5E83)],
-              ),
-              ServiceCard(
-                title: 'mobile_apps'.tr(context),
-                iconPath: 'assets/icon/notification.svg',
-                gradientColors: const [Color(0xFFB9D7E6), Color(0xFF65A8C8)],
-              ),
-              ServiceCard(
-                title: 'social_marketing'.tr(context),
-                iconPath: 'assets/icon/building.svg',
-                gradientColors: const [Color(0xFFE0E7EF), Color(0xFF9DAFC4)],
-              ),
-              ServiceCard(
-                title: 'systems_dashboards'.tr(context),
-                iconPath: 'assets/icon/home.svg',
-                gradientColors: const [Color(0xFF3B91B9), Color(0xFF19688F)],
-              ),
-              ServiceCard(
-                title: 'seo_optimization'.tr(context),
-                iconPath: 'assets/icon/service.svg',
-                gradientColors: const [Color(0xFF5A7899), Color(0xFF203549)],
-              ),
-              ServiceCard(
-                title: 'visual_identity'.tr(context),
-                iconPath: 'assets/icon/work.svg',
-                gradientColors: const [Color(0xFFBFCBDA), Color(0xFF5A7899)],
-              ),
-            ],
+          BlocBuilder<ServicesCubit, ServicesState>(
+            builder: (context, state) {
+              if (state is ServicesLoading || state is ServicesInitial) {
+                return SizedBox(
+                  height: 150.h,
+                  child: const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF259CCB)),
+                  ),
+                );
+              } else if (state is ServicesError) {
+                return Center(
+                  child: Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                );
+              } else if (state is ServicesLoaded) {
+                return GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.w,
+                    mainAxisSpacing: 10.h,
+                    childAspectRatio: 166 / 156,
+                  ),
+                  itemCount: state.services.length > 6
+                      ? 6
+                      : state.services.length,
+                  itemBuilder: (context, index) {
+                    return ServiceCard(service: state.services[index]);
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
         ],
       ),

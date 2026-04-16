@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class NavBarPainter extends CustomPainter {
-  final Color backgroundColor;
+  final Gradient backgroundColor;
   final double xCenter;
 
   NavBarPainter({required this.backgroundColor, required this.xCenter});
@@ -10,13 +10,15 @@ class NavBarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = backgroundColor
+      ..shader = backgroundColor.createShader(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+      )
       ..style = PaintingStyle.fill;
 
     final path = Path();
     final double w = size.width;
     final double h = size.height;
-    const double r = 10.0; // Corner radius
+    const double r = 13.0; // Corner radius
     const double scoopRadius = 40.0; // Base radius of the scoop
 
     // DRAW BACKGROUND PATH WITH EDGE PROTECTION

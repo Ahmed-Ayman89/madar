@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:madar/core/helper/app_text_style.dart';
+import '../../../services/domain/entities/service_entity.dart';
 
 class ServiceCard extends StatelessWidget {
-  final String title;
-  final String iconPath;
-  final List<Color> gradientColors;
+  final ServiceEntity service;
 
   const ServiceCard({
     super.key,
-    required this.title,
-    required this.iconPath,
-    required this.gradientColors,
+    required this.service,
   });
 
   @override
@@ -22,57 +19,87 @@ class ServiceCard extends StatelessWidget {
       height: 156.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.r),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: gradientColors,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Stack(
-        children: [
-          // Background subtle pattern or image overlay could go here
-          Padding(
-            padding: EdgeInsets.all(12.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Top Right Icon (RTL)
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    padding: EdgeInsets.all(8.w),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: SvgPicture.asset(
-                      iconPath,
-                      width: 20.w,
-                      height: 20.w,
-                      colorFilter: ColorFilter.mode(
-                        gradientColors.first,
-                        BlendMode.srcIn,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.r),
+        child: Stack(
+          children: [
+            // Background Image
+            if (service.imageUrl.isNotEmpty)
+              Positioned.fill(
+                child: Image.network(
+                  service.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: service.colors,
                       ),
                     ),
                   ),
                 ),
-                // Title
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.right,
-                    style: AppTextStyle.setWhite(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
+              ),
+
+            // Gradient Overlay for "Glassy" feel and readability
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.1),
+                      service.colors.first.withOpacity(0.8),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+            Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Title
+                  Text(
+                    service.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.setWhite(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ).copyWith(height: 1.2),
+                  ),
+                  SizedBox(height: 6.h),
+                  // Description
+                  Text(
+                    service.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.setWhite(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                    ).copyWith(
+                      color: Colors.white.withOpacity(0.85),
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
