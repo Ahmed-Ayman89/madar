@@ -12,13 +12,17 @@ class JobCubit extends Cubit<JobState> {
       emit(JobLoading());
       final response = await _jobRepository.getJobs(lang: lang);
 
-      if (response.isSuccess) {
-        emit(JobsLoaded(response.data!));
-      } else {
-        emit(JobError(response.message ?? 'Failed to load jobs'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(JobsLoaded(response.data!));
+        } else {
+          emit(JobError(response.message ?? 'Failed to load jobs'));
+        }
       }
     } catch (e) {
-      emit(JobError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(JobError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 
@@ -27,13 +31,17 @@ class JobCubit extends Cubit<JobState> {
       emit(JobLoading());
       final response = await _jobRepository.getJobDetails(id, lang: lang);
 
-      if (response.isSuccess) {
-        emit(JobDetailLoaded(response.data!));
-      } else {
-        emit(JobError(response.message ?? 'Failed to load job details'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(JobDetailLoaded(response.data!));
+        } else {
+          emit(JobError(response.message ?? 'Failed to load job details'));
+        }
       }
     } catch (e) {
-      emit(JobError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(JobError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 }

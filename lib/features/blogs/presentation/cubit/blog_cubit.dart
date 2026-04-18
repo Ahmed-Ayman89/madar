@@ -12,13 +12,17 @@ class BlogCubit extends Cubit<BlogState> {
       emit(BlogLoading());
       final response = await _blogRepository.getBlogs(lang: lang);
 
-      if (response.isSuccess) {
-        emit(BlogsLoaded(response.data!));
-      } else {
-        emit(BlogError(response.message ?? 'Failed to load blogs'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(BlogsLoaded(response.data!));
+        } else {
+          emit(BlogError(response.message ?? 'Failed to load blogs'));
+        }
       }
     } catch (e) {
-      emit(BlogError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(BlogError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 
@@ -27,13 +31,17 @@ class BlogCubit extends Cubit<BlogState> {
       emit(BlogLoading());
       final response = await _blogRepository.getBlogDetails(id, lang: lang);
 
-      if (response.isSuccess) {
-        emit(BlogDetailLoaded(response.data!));
-      } else {
-        emit(BlogError(response.message ?? 'Failed to load blog details'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(BlogDetailLoaded(response.data!));
+        } else {
+          emit(BlogError(response.message ?? 'Failed to load blog details'));
+        }
       }
     } catch (e) {
-      emit(BlogError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(BlogError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 }

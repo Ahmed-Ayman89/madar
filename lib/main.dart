@@ -8,6 +8,9 @@ import 'core/routing/app_router.dart';
 import 'core/localization/locale_cubit.dart';
 import 'core/localization/locale_cache_helper.dart';
 import 'core/localization/app_localizations.dart';
+import 'features/settings/presentation/cubit/settings_cubit.dart';
+import 'features/settings/data/repositories/settings_repository_impl.dart';
+import 'features/settings/data/data_sources/settings_remote_data_source.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +23,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          LocaleCubit(LocaleCacheHelper())..getCachedLanguage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              LocaleCubit(LocaleCacheHelper())..getCachedLanguage(),
+        ),
+        BlocProvider(
+          create: (context) => SettingsCubit(
+            SettingsRepositoryImpl(
+              SettingsRemoteDataSource(APIHelper()),
+            ),
+          )..getSettings(),
+        ),
+      ],
       child: BlocBuilder<LocaleCubit, LocaleState>(
         builder: (context, state) {
           return ScreenUtilInit(

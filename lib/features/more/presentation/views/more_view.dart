@@ -10,6 +10,7 @@ import 'package:madar/features/about_us/presentation/views/about_us_view.dart';
 import 'package:madar/features/packages/presentation/views/packages_view.dart';
 import 'package:madar/features/careers/presentation/views/careers_view.dart';
 import 'package:madar/features/blogs/presentation/views/blogs_view.dart';
+import 'package:madar/features/settings/presentation/views/settings_details_view.dart';
 
 class MoreView extends StatelessWidget {
   const MoreView({super.key});
@@ -126,6 +127,10 @@ class MoreView extends StatelessWidget {
                   MoreListItemWidget(
                     title: 'more_contact_us'.tr(context),
                     imagePath: 'assets/icon/call us.png',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SettingsDetailsView()),
+                    ),
                   ),
                   MoreListItemWidget(
                     title: 'more_terms'.tr(context),

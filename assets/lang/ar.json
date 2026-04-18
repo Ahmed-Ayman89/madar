@@ -235,5 +235,11 @@
   "menu_about": "نبذة عنا",
   "menu_services": "خدماتنا",
   "menu_packages": "الوجهات",
-  "menu_contact": "تواصل معنا"
+  "menu_contact": "تواصل معنا",
+  "settings_details_subtitle": "تواصل معنا واستكشف مقرنا الرئيسي",
+  "phone_number": "رقم الهاتف",
+  "whatsapp": "واتساب",
+  "email": "البريد الإلكتروني",
+  "not_available": "غير متاح",
+  "address": "الموقع والعنوان"
 }

@@ -12,13 +12,17 @@ class ProjectCubit extends Cubit<ProjectState> {
       emit(ProjectLoading());
       final response = await _projectRepository.getProjects(lang: lang);
 
-      if (response.isSuccess) {
-        emit(ProjectLoaded(response.data!));
-      } else {
-        emit(ProjectError(response.message ?? 'Failed to load projects'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(ProjectLoaded(response.data!));
+        } else {
+          emit(ProjectError(response.message ?? 'Failed to load projects'));
+        }
       }
     } catch (e) {
-      emit(ProjectError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(ProjectError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 }

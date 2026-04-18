@@ -12,13 +12,17 @@ class ProjectDetailsCubit extends Cubit<ProjectDetailsState> {
       emit(ProjectDetailsLoading());
       final response = await _projectRepository.getProjectDetails(id, lang: lang);
 
-      if (response.isSuccess) {
-        emit(ProjectDetailsLoaded(response.data!));
-      } else {
-        emit(ProjectDetailsError(response.message ?? 'Failed to load project details'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(ProjectDetailsLoaded(response.data!));
+        } else {
+          emit(ProjectDetailsError(response.message ?? 'Failed to load project details'));
+        }
       }
     } catch (e) {
-      emit(ProjectDetailsError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(ProjectDetailsError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 }

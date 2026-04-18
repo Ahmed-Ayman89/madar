@@ -12,13 +12,17 @@ class ServicesCubit extends Cubit<ServicesState> {
       emit(ServicesLoading());
       final response = await _servicesRepository.getServices(lang: lang);
 
-      if (response.isSuccess) {
-        emit(ServicesLoaded(response.data!));
-      } else {
-        emit(ServicesError(response.message ?? 'Failed to load services'));
+      if (!isClosed) {
+        if (response.isSuccess) {
+          emit(ServicesLoaded(response.data!));
+        } else {
+          emit(ServicesError(response.message ?? 'Failed to load services'));
+        }
       }
     } catch (e) {
-      emit(ServicesError('Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(ServicesError('Unexpected error: ${e.toString()}'));
+      }
     }
   }
 }

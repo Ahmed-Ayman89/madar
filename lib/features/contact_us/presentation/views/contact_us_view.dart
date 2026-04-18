@@ -56,15 +56,25 @@ class ContactUsView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildSocialIcon(Icons.ondemand_video), // YouTube
+                      _buildSocialIcon(
+                        Image.asset('assets/photo/facebook.png'),
+                      ), // YouTube
                       SizedBox(width: 12.w),
-                      _buildSocialIcon(Icons.close), // X
+                      _buildSocialIcon(
+                        Image.asset('assets/photo/instagram.png'),
+                      ), // X
                       SizedBox(width: 12.w),
-                      _buildSocialIcon(Icons.link), // LinkedIn
+                      _buildSocialIcon(
+                        Image.asset('assets/photo/linkedin.png'),
+                      ), // LinkedIn
                       SizedBox(width: 12.w),
-                      _buildSocialIcon(Icons.camera_alt_outlined), // Instagram
+                      _buildSocialIcon(
+                        Image.asset('assets/photo/new-twitter.png'),
+                      ), // Instagram
                       SizedBox(width: 12.w),
-                      _buildSocialIcon(Icons.facebook), // Facebook
+                      _buildSocialIcon(
+                        Image.asset('assets/photo/youtube.png'),
+                      ), // Facebook
                     ],
                   ),
                   SizedBox(height: 24.h),
@@ -74,7 +84,7 @@ class ContactUsView extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // SECTION: FAQ
             SizedBox(height: 50.h),
             Column(
@@ -131,7 +141,7 @@ class ContactUsView extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             // Bottom spacing or footer if any
             SizedBox(height: 100.h),
           ],
@@ -140,21 +150,15 @@ class ContactUsView extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialIcon(IconData icon) {
+  Widget _buildSocialIcon(Widget icon) {
     return Container(
       width: 32.w,
       height: 32.w, // Using width for both to ensure perfect circle
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         shape: BoxShape.circle,
       ),
-      child: Center(
-        child: Icon(
-          icon,
-          color: const Color(0xFF1B2B55), // Dark blue interior
-          size: 18.sp,
-        ),
-      ),
+      child: Center(child: icon),
     );
   }
 }

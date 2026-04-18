@@ -18,15 +18,15 @@ class NavBarPainter extends CustomPainter {
     final path = Path();
     final double w = size.width;
     final double h = size.height;
-    const double r = 13.0; // Corner radius
-    const double scoopRadius = 40.0; // Base radius of the scoop
+    const double r = 10.0; // Corner radius
+    const double scoopRadius = 41.0; // Base radius of the scoop
 
     // DRAW BACKGROUND PATH WITH EDGE PROTECTION
     // 1. Start from top-left corner
     path.moveTo(0, r);
     path.quadraticBezierTo(0, 0, r, 0);
 
-    double halfWidth = scoopRadius * 1.6;
+    double halfWidth = scoopRadius * 1.5;
 
     // 2. Move to the start of the scoop, but never go before 'r'
     double currentX = r;

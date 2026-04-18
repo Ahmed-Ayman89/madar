@@ -235,5 +235,11 @@
   "menu_about": "About Us",
   "menu_services": "Our Services",
   "menu_packages": "Destinations",
-  "menu_contact": "Contact Us"
+  "menu_contact": "Contact Us",
+  "settings_details_subtitle": "Connect with us and explore our headquarters",
+  "phone_number": "Phone Number",
+  "whatsapp": "WhatsApp",
+  "email": "Email Address",
+  "not_available": "Not Available",
+  "address": "Location & Address"
 }
