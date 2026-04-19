@@ -20,4 +20,7 @@ abstract class EndPoints {
   static const String jobs = 'jobs';
   static const String upload = 'mobile/upload';
   static const String settings = 'settings';
+  static const String packages = 'packages';
+  static const String contact = 'contact';
+  static const String teams = 'teams';
 }

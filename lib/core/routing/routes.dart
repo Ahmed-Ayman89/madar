@@ -6,5 +6,6 @@ abstract class Routes {
   static const String kProjectDetailsView = '/projectDetails';
   static const String kBlogDetailsView = '/blogDetails';
   static const String kJobDetailsView = '/jobDetails';
+  static const String kJobApplyView = '/jobApply';
 }
 

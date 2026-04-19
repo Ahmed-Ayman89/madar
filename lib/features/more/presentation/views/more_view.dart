@@ -129,7 +129,9 @@ class MoreView extends StatelessWidget {
                     imagePath: 'assets/icon/call us.png',
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const SettingsDetailsView()),
+                      MaterialPageRoute(
+                        builder: (_) => const SettingsDetailsView(),
+                      ),
                     ),
                   ),
                   MoreListItemWidget(
@@ -143,17 +145,12 @@ class MoreView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Placeholder for Saudi flag image/icon
-                        Container(
-                          width: 24.w,
-                          height: 16.h,
-                          color: Colors.green[800],
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.star,
-                              color: Colors.white,
-                              size: 8.sp,
-                            ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            'assets/photo/Country Flags 1.png',
+                            width: 26.w,
+                            height: 26.h,
                           ),
                         ),
                         SizedBox(width: 8.w),

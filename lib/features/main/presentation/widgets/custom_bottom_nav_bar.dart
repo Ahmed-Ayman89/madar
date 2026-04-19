@@ -52,6 +52,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                         end: Alignment.topCenter,
                         colors: [
                           const Color(0xFF0E1A39),
+                          const Color(0xFF0E1A39),
                           const Color(0xFF182D62),
                         ],
                       ),

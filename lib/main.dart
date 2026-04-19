@@ -31,9 +31,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => SettingsCubit(
-            SettingsRepositoryImpl(
-              SettingsRemoteDataSource(APIHelper()),
-            ),
+            SettingsRepositoryImpl(SettingsRemoteDataSource(APIHelper())),
           )..getSettings(),
         ),
       ],

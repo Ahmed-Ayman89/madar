@@ -7,6 +7,8 @@ import 'package:madar/core/localization/app_localizations.dart';
 import 'package:madar/core/localization/locale_cubit.dart';
 import 'package:madar/core/widgets/custom_header_widget.dart';
 import 'package:madar/core/network/api_helper.dart';
+import 'package:go_router/go_router.dart';
+import 'package:madar/core/routing/routes.dart';
 import '../cubit/job_cubit.dart';
 import '../cubit/job_state.dart';
 import '../../data/data_sources/job_remote_data_source.dart';
@@ -65,7 +67,7 @@ class JobDetailsView extends StatelessWidget {
                           SizedBox(height: 12.h),
                           _buildListItems(job.responsibilities),
                           SizedBox(height: 50.h),
-                          _buildApplyButton(context),
+                          _buildApplyButton(context, job),
                           SizedBox(height: 50.h),
                         ],
                       ),
@@ -156,12 +158,14 @@ class JobDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildApplyButton(BuildContext context) {
+  Widget _buildApplyButton(BuildContext context, JobEntity job) {
     return SizedBox(
       width: double.infinity,
       height: 54.h,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          context.push(Routes.kJobApplyView, extra: job);
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF259CCB),
           shape: RoundedRectangleBorder(

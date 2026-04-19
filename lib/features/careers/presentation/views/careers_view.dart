@@ -12,153 +12,172 @@ import '../widgets/job_card_widget.dart';
 import '../widgets/filter_dropdown_widget.dart';
 import '../cubit/job_cubit.dart';
 import '../cubit/job_state.dart';
+import '../cubit/team_cubit.dart';
+import '../cubit/team_state.dart';
 import '../../data/data_sources/job_remote_data_source.dart';
 import '../../data/repositories/job_repository_impl.dart';
+import '../../data/data_sources/team_remote_data_source.dart';
+import '../../data/repositories/team_repository_impl.dart';
 
 class CareersView extends StatelessWidget {
   const CareersView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data for team members
-    final List<Map<String, String>> teamMembers = [
-      {
-        'name': 'Mauro Sicard',
-        'title': 'product designer',
-        'image': 'assets/photo/madar_logo.png',
-      },
-      {
-        'name': 'Mauro Sicard',
-        'title': 'product designer',
-        'image': 'assets/photo/madar_logo.png',
-      },
-      {
-        'name': 'Mauro Sicard',
-        'title': 'product designer',
-        'image': 'assets/photo/madar_logo.png',
-      },
-    ];
-
-    return BlocProvider(
-      create: (context) {
-        final lang = context.read<LocaleCubit>().state.locale.languageCode;
-        return JobCubit(
-          JobRepositoryImpl(JobRemoteDataSource(APIHelper())),
-        )..getJobs(lang: lang);
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final lang = context.read<LocaleCubit>().state.locale.languageCode;
+            return JobCubit(
+              JobRepositoryImpl(JobRemoteDataSource(APIHelper())),
+            )..getJobs(lang: lang);
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            final lang = context.read<LocaleCubit>().state.locale.languageCode;
+            return TeamCubit(
+              TeamRepositoryImpl(TeamRemoteDataSource(APIHelper())),
+            )..getTeamMembers(lang: lang);
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: BlocBuilder<JobCubit, JobState>(
-          builder: (context, state) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  CustomHeaderWidget(
-                    title: 'team_title'.tr(context),
-                    titleStyle: AppTextStyle.setWhite(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomHeaderWidget(
+                title: 'team_title'.tr(context),
+                titleStyle: AppTextStyle.setWhite(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                ),
+                subtitle: 'team_category'.tr(context),
+                subtitleStyle: AppTextStyle.setStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF259CCB),
+                ),
+                content: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Text(
+                        'team_description'.tr(context),
+                        style: AppTextStyle.setWhite(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ).copyWith(
+                          color: Colors.white.withOpacity(0.85),
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    subtitle: 'team_category'.tr(context),
-                    subtitleStyle: AppTextStyle.setStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF259CCB),
-                    ),
-                    content: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: Text(
-                            'team_description'.tr(context),
-                            style: AppTextStyle.setWhite(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ).copyWith(
-                              color: Colors.white.withOpacity(0.85),
-                              height: 1.5,
+                    SizedBox(height: 40.h),
+                    
+                    // Team Members Horizontal List
+                    BlocBuilder<TeamCubit, TeamState>(
+                      builder: (context, state) {
+                        if (state is TeamLoading) {
+                          return SizedBox(
+                            height: 250.h,
+                            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+                          );
+                        } else if (state is TeamError) {
+                          return SizedBox(
+                            height: 250.h,
+                            child: Center(child: Text(state.message, style: const TextStyle(color: Colors.white))),
+                          );
+                        } else if (state is TeamSuccess) {
+                          if (state.members.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return SizedBox(
+                            height: 250.h,
+                            child: ListView.separated(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.members.length,
+                              separatorBuilder: (context, index) => SizedBox(width: 16.w),
+                              itemBuilder: (context, index) {
+                                final member = state.members[index];
+                                final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+                                final displayTitle = (isArabic && member.jobTitleAr.isNotEmpty) 
+                                    ? member.jobTitleAr 
+                                    : member.jobTitle;
+
+                                return TeamCardWidget(
+                                  name: member.name,
+                                  title: displayTitle,
+                                  imageUrl: member.image,
+                                );
+                              },
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(height: 40.h),
-                        SizedBox(
-                          height: 250.h,
-                          child: ListView.separated(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: teamMembers.length,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(width: 16.w),
-                            itemBuilder: (context, index) {
-                              final member = teamMembers[index];
-                              return TeamCardWidget(
-                                name: member['name']!,
-                                title: member['title']!,
-                                imagePath: member['image']!,
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
-                      ],
+                          );
+                        }
+                        return SizedBox(height: 250.h);
+                      },
                     ),
-                  ),
-
-                  // SECTION 2: Join Our Team
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 40.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'join_team_title'.tr(context),
-                          style: AppTextStyle.setStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w),
-                          child: Text(
-                            'join_team_desc'.tr(context),
-                            style: AppTextStyle.setStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black87,
-                            ).copyWith(height: 1.6),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
-
-                        // Filters Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FilterDropdownWidget(
-                                text: 'filter_on_site'.tr(context)),
-                            FilterDropdownWidget(
-                                text: 'filter_all_teams'.tr(context)),
-                            FilterDropdownWidget(
-                                text: 'filter_full_time'.tr(context)),
-                          ],
-                        ),
-                        SizedBox(height: 30.h),
-
-                        // Job Listing
-                        _buildJobListing(context, state),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 60.h),
-                ],
+                    SizedBox(height: 30.h),
+                  ],
+                ),
               ),
-            );
-          },
+
+              // SECTION 2: Join Our Team
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 40.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'join_team_title'.tr(context),
+                      style: AppTextStyle.setStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Text(
+                        'join_team_desc'.tr(context),
+                        style: AppTextStyle.setStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black87,
+                        ).copyWith(height: 1.6),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 30.h),
+
+                    // Filters Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FilterDropdownWidget(text: 'filter_on_site'.tr(context)),
+                        FilterDropdownWidget(text: 'filter_all_teams'.tr(context)),
+                        FilterDropdownWidget(text: 'filter_full_time'.tr(context)),
+                      ],
+                    ),
+                    SizedBox(height: 30.h),
+
+                    // Job Listing
+                    BlocBuilder<JobCubit, JobState>(
+                      builder: (context, state) {
+                        return _buildJobListing(context, state);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 60.h),
+            ],
+          ),
         ),
       ),
     );

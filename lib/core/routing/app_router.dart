@@ -6,6 +6,8 @@ import '../../features/home/presentation/views/home_view.dart';
 import '../../features/projects/presentation/views/project_details_view.dart';
 import '../../features/blogs/presentation/views/blog_details_view.dart';
 import '../../features/careers/presentation/views/job_details_view.dart';
+import '../../features/careers/presentation/views/job_apply_view.dart';
+import '../../features/careers/domain/entities/job_entity.dart';
 import 'routes.dart';
 
 abstract class AppRouter {
@@ -46,6 +48,13 @@ abstract class AppRouter {
         builder: (context, state) {
           final jobId = state.extra as String;
           return JobDetailsView(jobId: jobId);
+        },
+      ),
+      GoRoute(
+        path: Routes.kJobApplyView,
+        builder: (context, state) {
+          final job = state.extra as JobEntity;
+          return JobApplyView(job: job);
         },
       ),
     ],

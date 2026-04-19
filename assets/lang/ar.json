@@ -241,5 +241,22 @@
   "whatsapp": "واتساب",
   "email": "البريد الإلكتروني",
   "not_available": "غير متاح",
-  "address": "الموقع والعنوان"
+  "address": "الموقع والعنوان",
+  "personal_info": "البيانات الشخصية",
+  "professional_info": "المعلومات المهنية",
+  "full_name_required": "الاسم الكامل مطلوب",
+  "email_invalid": "البريد الإلكتروني غير صالح",
+  "phone_required": "رقم الجوال مطلوب",
+  "experience_years": "عدد سنوات الخبرة",
+  "skills_tools": "ما هي التقنيات والأدوات التي لديك خبرة بها؟",
+  "current_status": "الحالة الوظيفية الحالية",
+  "current_location": "أين تقيم حالياً؟",
+  "cv_file": "السيرة الذاتية (CV)",
+  "cv_required": "السيرة الذاتية مطلوبة",
+  "upload_cv_hint": "رفع السيرة الذاتية (الحد الأقصى 5MB)",
+  "send_application": "إرسال الطلب",
+  "application_success": "تم إرسال طلبك بنجاح",
+  "personal_link": "رابط شخصي",
+  "city": "المدينة",
+  "other": "أخرى"
 }

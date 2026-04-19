@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
+import 'package:madar/features/packages/domain/entities/package_entity.dart';
 
 class PackageCardWidget extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String price;
-  final List<String> features;
+  final PackageEntity package;
   final IconData icon;
   final Color iconColor;
-  final bool isHighlighted;
-  final String? badgeText;
 
   const PackageCardWidget({
     super.key,
-    required this.title,
-    required this.subtitle,
-    required this.price,
-    required this.features,
+    required this.package,
     required this.icon,
     this.iconColor = const Color(0xFF14244B),
-    this.isHighlighted = false,
-    this.badgeText,
   });
+
+  Future<void> _launchUrl(String url) async {
+    if (url.isEmpty) return;
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final badgeText = isArabic ? package.badgeAr : package.badge;
+    final isHighlighted = package.isFeatured;
+
     if (isHighlighted) {
       // Draw highlighted version with badge
       return Container(
@@ -40,21 +44,21 @@ class PackageCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Badge Area
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              child: Text(
-                badgeText ?? '',
-                key: const ValueKey('badgeText'),
-                style: AppTextStyle.setStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF259CCB),
+            if (badgeText.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                child: Text(
+                  badgeText,
+                  style: AppTextStyle.setStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF259CCB),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
             // The actual card
-            _buildMainCard(context),
+            _buildMainCard(context, isArabic),
           ],
         ),
       );
@@ -63,11 +67,19 @@ class PackageCardWidget extends StatelessWidget {
     // Normal unhighlighted card
     return Padding(
       padding: EdgeInsets.only(bottom: 24.h),
-      child: _buildMainCard(context),
+      child: _buildMainCard(context, isArabic),
     );
   }
 
-  Widget _buildMainCard(BuildContext context) {
+  Widget _buildMainCard(BuildContext context, bool isArabic) {
+    final title = isArabic ? package.title : package.title;
+    final displayTitle = title.isNotEmpty ? title : package.title;
+    final displayDescription = package.description;
+    final displayBillingCycle = isArabic
+        ? package.billingCycleAr
+        : package.billingCycle;
+    final isHighlighted = package.isFeatured;
+
     return Container(
       width: 347.w,
       padding: EdgeInsets.all(24.w),
@@ -88,7 +100,6 @@ class PackageCardWidget extends StatelessWidget {
               blurRadius: 8.r,
             ),
         ],
-        // border: isHighlighted ? null : Border.all(color: Colors.grey.shade200, width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -99,21 +110,23 @@ class PackageCardWidget extends StatelessWidget {
             children: [
               Icon(icon, color: iconColor, size: 24.sp),
               SizedBox(width: 8.w),
-              Text(
-                title,
-                style: AppTextStyle.setStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14244B),
+              Expanded(
+                child: Text(
+                  displayTitle,
+                  style: AppTextStyle.setStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF14244B),
+                  ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 8.h),
 
-          // Subtitle
+          // Subtitle (Description)
           Text(
-            subtitle,
+            displayDescription,
             style: AppTextStyle.setStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
@@ -138,8 +151,9 @@ class PackageCardWidget extends StatelessWidget {
           SizedBox(height: 12.h),
 
           // Features List
-          ...features.map(
-            (feature) => Padding(
+          ...package.features.map((feature) {
+            final featureTitle = isArabic ? feature.titleAr : feature.title;
+            return Padding(
               padding: EdgeInsets.only(bottom: 12.h),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +166,7 @@ class PackageCardWidget extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
-                      feature,
+                      featureTitle,
                       style: AppTextStyle.setStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -162,8 +176,8 @@ class PackageCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
+            );
+          }),
 
           SizedBox(height: 16.h),
 
@@ -173,7 +187,7 @@ class PackageCardWidget extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                price,
+                '${package.price}',
                 style: AppTextStyle.setStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
@@ -183,29 +197,37 @@ class PackageCardWidget extends StatelessWidget {
               ),
               SizedBox(width: 4.w),
               Text(
-                'pkg_currency'.tr(context),
+                package.currency.isNotEmpty
+                    ? package.currency
+                    : 'pkg_currency'.tr(context),
                 style: AppTextStyle.setStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(width: 4.w),
-              Text(
-                '/${'pkg_monthly'.tr(context)}',
-                style: AppTextStyle.setStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade500,
+              if (displayBillingCycle.isNotEmpty) ...[
+                SizedBox(width: 4.w),
+                Text(
+                  '/$displayBillingCycle',
+                  style: AppTextStyle.setStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade500,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
           SizedBox(height: 24.h),
 
           // Button
           InkWell(
-            onTap: () {},
+            onTap: () {
+              final ctaUrl = isArabic ? package.ctaUrlAr : package.ctaUrl;
+              final finalUrl = ctaUrl.isNotEmpty ? ctaUrl : package.ctaUrl;
+              _launchUrl(finalUrl);
+            },
             borderRadius: BorderRadius.circular(87.r),
             child: Container(
               width: 319.w, // almost full card width
@@ -221,14 +243,17 @@ class PackageCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    // Try to simulate Whatsapp or a chat icon
                     Icons.chat_outlined,
                     color: isHighlighted ? Colors.white : Colors.green,
                     size: 18.sp,
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    'pkg_contact_btn'.tr(context),
+                    isArabic && package.ctaLabelAr.isNotEmpty
+                        ? package.ctaLabelAr
+                        : package.ctaLabel.isNotEmpty
+                        ? package.ctaLabel
+                        : 'pkg_contact_btn'.tr(context),
                     style: AppTextStyle.setStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,

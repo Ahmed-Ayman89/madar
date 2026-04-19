@@ -241,5 +241,22 @@
   "whatsapp": "WhatsApp",
   "email": "Email Address",
   "not_available": "Not Available",
-  "address": "Location & Address"
+  "address": "Location & Address",
+  "personal_info": "Personal Information",
+  "professional_info": "Professional Information",
+  "full_name_required": "Full name is required",
+  "email_invalid": "Invalid email address",
+  "phone_required": "Phone number is required",
+  "experience_years": "Years of Experience",
+  "skills_tools": "What technologies and tools do you have experience with?",
+  "current_status": "Current Job Status",
+  "current_location": "Where do you currently reside?",
+  "cv_file": "Resume (CV)",
+  "cv_required": "CV is required",
+  "upload_cv_hint": "Upload CV (Max size 5MB)",
+  "send_application": "Submit Application",
+  "application_success": "Your application has been submitted successfully",
+  "personal_link": "Personal Link",
+  "city": "City",
+  "other": "Other"
 }

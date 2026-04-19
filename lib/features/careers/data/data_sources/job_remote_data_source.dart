@@ -3,6 +3,8 @@ import 'package:madar/core/network/api_endpoint.dart';
 import 'package:madar/core/network/api_response.dart';
 import '../models/job_model.dart';
 
+import '../models/job_apply_request_model.dart';
+
 class JobRemoteDataSource {
   final APIHelper _apiHelper;
 
@@ -26,6 +28,15 @@ class JobRemoteDataSource {
       queryParameters: lang != null ? {'lang': lang} : null,
       isProtected: false,
       parser: (json) => JobModel.fromJson(json['data'], lang: lang ?? 'en'),
+    );
+  }
+
+  Future<ApiResponse<void>> applyForJob(JobApplyRequestModel request) async {
+    return await _apiHelper.postRequest<void>(
+      endPoint: '${EndPoints.jobs}/apply',
+      data: request.toJson(),
+      isFormData: false, // Standard JSON post
+      isAuthorized: false,
     );
   }
 }
