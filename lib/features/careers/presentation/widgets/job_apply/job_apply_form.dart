@@ -1,12 +1,9 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madar/core/localization/app_localizations.dart';
-import 'package:madar/core/network/api_endpoint.dart';
-import 'package:madar/core/network/api_helper.dart';
 import 'package:madar/features/careers/domain/entities/job_apply_request_entity.dart';
 import 'package:madar/features/careers/domain/entities/job_entity.dart';
 import 'package:madar/features/careers/presentation/cubit/job_apply_cubit.dart';
@@ -59,10 +56,13 @@ class _JobApplyFormState extends State<JobApplyForm> {
       if (result != null && result.files.isNotEmpty) {
         final path = result.files.first.path;
         if (path != null) {
+          final file = File(path);
           setState(() {
-            _cvFile = File(path);
+            _cvFile = file;
           });
-          await _uploadCv();
+          if (mounted) {
+            context.read<JobApplyCubit>().uploadCv(file);
+          }
         }
       }
     } catch (e) {
@@ -71,44 +71,6 @@ class _JobApplyFormState extends State<JobApplyForm> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Error selecting file')));
-      }
-    }
-  }
-
-  Future<void> _uploadCv() async {
-    if (_cvFile == null) return;
-
-    setState(() => _isUploadingCv = true);
-
-    try {
-      final response = await APIHelper().postRequest<String>(
-        endPoint: EndPoints.upload,
-        data: {'file': await MultipartFile.fromFile(_cvFile!.path)},
-        isFormData: true,
-        isAuthorized: false,
-        parser: (json) => json['data']['url'],
-      );
-
-      if (response.isSuccess) {
-        setState(() {
-          _cvUrl = response.data;
-        });
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(response.message ?? 'CV Upload Failed')),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Error uploading CV')));
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isUploadingCv = false);
       }
     }
   }
@@ -148,6 +110,22 @@ class _JobApplyFormState extends State<JobApplyForm> {
           );
           Navigator.pop(context);
         } else if (state is JobApplyError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        } else if (state is JobCvUploading) {
+          setState(() {
+            _isUploadingCv = true;
+          });
+        } else if (state is JobCvUploaded) {
+          setState(() {
+            _isUploadingCv = false;
+            _cvUrl = state.url;
+          });
+        } else if (state is JobCvUploadError) {
+          setState(() {
+            _isUploadingCv = false;
+          });
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));

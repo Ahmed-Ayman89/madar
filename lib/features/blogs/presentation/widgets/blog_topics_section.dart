@@ -4,22 +4,12 @@ import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
 
 class BlogTopicsSection extends StatelessWidget {
-  const BlogTopicsSection({super.key});
+  final List<String> tags;
+  const BlogTopicsSection({super.key, required this.tags});
 
   @override
   Widget build(BuildContext context) {
-    final List<String> topics = [
-      'topic_technology',
-      'topic_marketing',
-      'topic_seo',
-      'topic_growth',
-      'topic_uiux',
-      'topic_ai',
-      'topic_flutter',
-      'topic_technology',
-      'topic_development',
-    ];
-
+    if (tags.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
       child: Container(
@@ -55,8 +45,8 @@ class BlogTopicsSection extends StatelessWidget {
                 spacing: 12.w,
                 runSpacing: 12.h,
                 alignment: WrapAlignment.end,
-                children: topics
-                    .map((topic) => _buildTopicChip(topic.tr(context)))
+                children: tags
+                    .map((topic) => _buildTopicChip(topic))
                     .toList(),
               ),
             ),

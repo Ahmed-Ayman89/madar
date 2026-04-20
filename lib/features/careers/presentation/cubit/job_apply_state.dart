@@ -21,3 +21,23 @@ class JobApplyError extends JobApplyState {
   @override
   List<Object?> get props => [message];
 }
+
+class JobCvUploading extends JobApplyState {}
+
+class JobCvUploaded extends JobApplyState {
+  final String url;
+
+  const JobCvUploaded(this.url);
+
+  @override
+  List<Object?> get props => [url];
+}
+
+class JobCvUploadError extends JobApplyState {
+  final String message;
+
+  const JobCvUploadError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

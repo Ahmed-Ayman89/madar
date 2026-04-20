@@ -18,7 +18,7 @@ abstract class EndPoints {
   static const String services = 'services';
   static const String projects = 'projects';
   static const String jobs = 'jobs';
-  static const String upload = 'mobile/upload';
+  static const String uploadCv = 'upload/cv';
   static const String settings = 'settings';
   static const String packages = 'packages';
   static const String contact = 'contact';

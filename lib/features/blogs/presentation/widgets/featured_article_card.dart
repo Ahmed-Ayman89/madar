@@ -62,14 +62,15 @@ class FeaturedArticleCard extends StatelessWidget {
                   SizedBox(height: 12.h),
                   Row(
                     children: [
-                      Text(
-                        DateFormat('yyyy-MM-dd').format(blog.createdAt),
-                        style: AppTextStyle.setStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black.withOpacity(0.5),
+                      if (blog.createdAt != null)
+                        Text(
+                          DateFormat('yyyy-MM-dd').format(blog.createdAt!),
+                          style: AppTextStyle.setStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
                         ),
-                      ),
                       SizedBox(width: 8.w),
                       Container(
                         width: 4.r,

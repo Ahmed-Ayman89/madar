@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:madar/core/network/api_helper.dart';
 import 'package:madar/core/network/api_endpoint.dart';
 import 'package:madar/core/network/api_response.dart';
@@ -37,6 +39,16 @@ class JobRemoteDataSource {
       data: request.toJson(),
       isFormData: false, // Standard JSON post
       isAuthorized: false,
+    );
+  }
+
+  Future<ApiResponse<String>> uploadCv(File file) async {
+    return await _apiHelper.postRequest<String>(
+      endPoint: EndPoints.uploadCv,
+      data: {'file': await MultipartFile.fromFile(file.path)},
+      isFormData: true,
+      isAuthorized: false,
+      parser: (json) => json['data']['url'],
     );
   }
 }

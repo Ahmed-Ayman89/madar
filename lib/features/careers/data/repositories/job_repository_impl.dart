@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:madar/core/network/api_response.dart';
 import '../../domain/entities/job_entity.dart';
 import '../../domain/repositories/job_repository.dart';
@@ -25,5 +26,10 @@ class JobRepositoryImpl implements JobRepository {
     return await _jobRemoteDataSource.applyForJob(
       JobApplyRequestModel.fromEntity(request),
     );
+  }
+
+  @override
+  Future<ApiResponse<String>> uploadCv(File file) async {
+    return await _jobRemoteDataSource.uploadCv(file);
   }
 }

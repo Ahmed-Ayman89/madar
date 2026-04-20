@@ -6,42 +6,74 @@ class BlogModel extends BlogEntity {
   const BlogModel({
     required super.id,
     required super.title,
-    required super.content,
+    super.content,
     required super.excerpt,
     super.imageCover,
-    required super.categories,
-    required super.tags,
-    required super.tagsAr,
+    super.categories,
+    super.tags,
+    super.tagsAr,
     super.seo,
-    required super.createdBy,
-    required super.createdAt,
-    required super.updatedAt,
+    super.createdBy,
+    super.createdAt,
+    super.updatedAt,
     required super.slug,
+    super.relatedBlogs,
+    super.latestNews,
   });
 
-  factory BlogModel.fromJson(Map<String, dynamic> json) {
+  factory BlogModel.fromJson(dynamic json) {
+    if (json is String) {
+      return BlogModel(
+        id: json,
+        title: '',
+        excerpt: '',
+        slug: '',
+      );
+    }
+    
+    if (json is! Map<String, dynamic>) {
+      return BlogModel(
+        id: '',
+        title: '',
+        excerpt: '',
+        slug: '',
+      );
+    }
+
     return BlogModel(
       id: json['_id'] ?? '',
       title: json['title'] ?? '',
-      content: json['content'] ?? '',
+      content: json['content'],
       excerpt: json['excerpt'] ?? '',
       imageCover: json['imageCover'] != null
-          ? BlogImageModel.fromJson(json['imageCover'])
+          ? (json['imageCover'] is Map<String, dynamic>
+              ? BlogImageModel.fromJson(json['imageCover'])
+              : BlogImageModel(url: json['imageCover'].toString(), alt: ''))
           : null,
       categories: json['categories'] != null
           ? List<String>.from(json['categories'])
-          : [],
-      tags: json['tags'] != null ? List<String>.from(json['tags']) : [],
+          : null,
+      tags: json['tags'] != null ? List<String>.from(json['tags']) : null,
       tagsAr: json['tagsAr'] != null
           ? List<String>.from(json['tagsAr'])
-          : [],
-      seo: json['seo'] != null ? BlogSeoModel.fromJson(json['seo']) : null,
-      createdBy: json['createdBy'] ?? '',
-      createdAt: DateTime.parse(
-          json['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(
-          json['updatedAt'] ?? DateTime.now().toIso8601String()),
+          : null,
+      seo: json['seo'] != null && json['seo'] is Map<String, dynamic>
+          ? BlogSeoModel.fromJson(json['seo'])
+          : null,
+      createdBy: json['createdBy'],
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       slug: json['slug'] ?? '',
+      relatedBlogs: json['relatedBlogs'] != null && json['relatedBlogs'] is List
+          ? (json['relatedBlogs'] as List)
+              .map((e) => BlogModel.fromJson(e))
+              .toList()
+          : null,
+      latestNews: json['latestNews'] != null && json['latestNews'] is List
+          ? (json['latestNews'] as List)
+              .map((e) => BlogModel.fromJson(e))
+              .toList()
+          : null,
     );
   }
 
@@ -59,9 +91,15 @@ class BlogModel extends BlogEntity {
       'tagsAr': tagsAr,
       'seo': seo != null ? (seo as BlogSeoModel).toJson() : null,
       'createdBy': createdBy,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       'slug': slug,
+      'relatedBlogs': relatedBlogs != null
+          ? relatedBlogs!.map((e) => (e as BlogModel).toJson()).toList()
+          : null,
+      'latestNews': latestNews != null
+          ? latestNews!.map((e) => (e as BlogModel).toJson()).toList()
+          : null,
     };
   }
 }

@@ -15,7 +15,10 @@ class BlogSeoModel extends BlogSeoEntity {
     super.canonicalUrl,
   });
 
-  factory BlogSeoModel.fromJson(Map<String, dynamic> json) {
+  factory BlogSeoModel.fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      return const BlogSeoModel();
+    }
     return BlogSeoModel(
       metaTitle: json['metaTitle'],
       metaDescription: json['metaDescription'],

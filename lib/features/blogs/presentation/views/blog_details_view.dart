@@ -130,18 +130,26 @@ class BlogDetailsView extends StatelessWidget {
                     FeaturedArticleCard(blog: blog),
 
                     // SECTION 4: Detailed Content
-                    BlogContentSection(content: blog.content),
+                    BlogContentSection(content: blog.content ?? ""),
 
                     // SECTION 5: Related Articles
-                    const RelatedArticlesSlider(),
+                    RelatedArticlesSlider(
+                      articles: blog.relatedBlogs ?? [],
+                    ),
 
                     // SECTION 6: Blog Topics
-                    const BlogTopicsSection(),
+                    BlogTopicsSection(
+                      tags: (context.read<LocaleCubit>().state.locale.languageCode == 'ar' 
+                          ? blog.tagsAr ?? blog.tags 
+                          : blog.tags) ?? [],
+                    ),
 
                     SizedBox(height: 30.h),
 
                     // SECTION 7: Latest News
-                    const LatestNewsList(),
+                    LatestNewsList(
+                      news: blog.latestNews ?? [],
+                    ),
 
                     SizedBox(height: 100.h),
                   ],
