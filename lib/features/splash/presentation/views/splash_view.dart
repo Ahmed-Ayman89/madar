@@ -13,8 +13,7 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView>
-    with TickerProviderStateMixin {
+class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
   late AnimationController _controller;
   late AnimationController _orbitController;
   final List<Particle> _particles = [];
@@ -44,7 +43,7 @@ class _SplashViewState extends State<SplashView>
 
     Timer(const Duration(seconds: 4), () {
       if (mounted) {
-        context.go(Routes.kOnboardingView);
+        context.go(Routes.kSignUpView);
       }
     });
   }
@@ -150,7 +149,9 @@ class _SplashViewState extends State<SplashView>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primary500.withValues(alpha: 0.5),
+                              color: AppColors.primary500.withValues(
+                                alpha: 0.5,
+                              ),
                               blurRadius: 30,
                               spreadRadius: 10,
                             ),

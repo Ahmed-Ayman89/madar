@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
 import 'package:madar/core/localization/locale_cubit.dart';
-import 'package:madar/core/widgets/CustomElevatedButton_widget.dart';
-import 'package:madar/core/widgets/custom_header_widget.dart';
+import 'package:madar/core/widgets/custom_app_bar.dart';
 import 'package:madar/core/network/api_helper.dart';
 
 import '../widgets/project_card_widget.dart';
@@ -27,81 +26,83 @@ class ProjectsView extends StatelessWidget {
         )..getProjects(lang: lang);
       },
       child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'projects_latest_title'.tr(context),
+          showBackButton: false,
+        ),
         backgroundColor: Colors.white,
         body: BlocBuilder<ProjectCubit, ProjectState>(
           builder: (context, state) {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  CustomHeaderWidget(
-                    title: 'projects_header_category'.tr(context),
-                    titleStyle: AppTextStyle.setStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF259CCB),
+                  SizedBox(height: 16.h),
+                  // WhatsApp Banner
+                  Container(
+                    width: 343.w,
+                    height: 86.h,
+                    margin: EdgeInsets.symmetric(horizontal: 16.w),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF4FAACE), Color(0xFF369EC9)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
-                    subtitle: 'projects_header_subtitle'.tr(context),
-                    subtitleStyle: AppTextStyle.setWhite(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                    ),
-                    content: Column(
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: Text(
-                            'projects_header_description'.tr(context),
-                            style: AppTextStyle.setWhite(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ).copyWith(
-                              color: Colors.white.withOpacity(0.85),
-                              height: 1.5,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+                        const Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 16,
                         ),
-                        SizedBox(height: 35.h),
-                        CustomElevatedButton(
-                          text: 'projects_header_button'.tr(context),
-                          onPressed: () {},
+                        const Spacer(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'هل لديك فكرة مشروع؟',
+                              style: AppTextStyle.setStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'تواصل معنا عبر واتساب',
+                              style: AppTextStyle.setStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 12.w),
+                        const Icon(
+                          Icons.abc_outlined,
+                          color: Colors.white,
+                          size: 32,
                         ),
                       ],
                     ),
                   ),
-
-                  // SECTION: Latest Projects
-                  SizedBox(height: 50.h),
-                  Column(
-                    children: [
-                      Text(
-                        'projects_latest_title'.tr(context),
-                        style: AppTextStyle.setStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.w),
-                        child: Text(
-                          'projects_latest_description'.tr(context),
-                          style: AppTextStyle.setStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black.withOpacity(0.6),
-                          ).copyWith(height: 1.5),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      SizedBox(height: 40.h),
-
-                      // Project Content Based on State
-                      _buildProjectContent(context, state),
-                    ],
+                  SizedBox(height: 24.h),
+                  // Section Title
+                  Text(
+                    'معرض مشاريعنا المميزة',
+                    style: AppTextStyle.setStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF182D62),
+                    ),
                   ),
-                  SizedBox(height: 100.h),
+                  SizedBox(height: 16.h),
+                  // Project Content Based on State
+                  _buildProjectContent(context, state),
                 ],
               ),
             );
@@ -138,8 +139,8 @@ class ProjectsView extends StatelessWidget {
             SizedBox(height: 16.h),
             ElevatedButton(
               onPressed: () => context.read<ProjectCubit>().getProjects(
-                    lang: context.read<LocaleCubit>().state.locale.languageCode,
-                  ),
+                lang: context.read<LocaleCubit>().state.locale.languageCode,
+              ),
               child: const Text('Retry'),
             ),
           ],
@@ -147,9 +148,7 @@ class ProjectsView extends StatelessWidget {
       );
     } else if (state is ProjectLoaded) {
       if (state.projects.isEmpty) {
-        return Center(
-          child: Text('no_projects_found'.tr(context)),
-        );
+        return Center(child: Text('no_projects_found'.tr(context)));
       }
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -158,9 +157,7 @@ class ProjectsView extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: state.projects.length,
           itemBuilder: (context, index) {
-            return ProjectCardWidget(
-              project: state.projects[index],
-            );
+            return ProjectCardWidget(project: state.projects[index]);
           },
         ),
       );

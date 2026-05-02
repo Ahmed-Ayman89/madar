@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:madar/features/main/presentation/views/main_view.dart';
 import '../../features/splash/presentation/views/splash_view.dart';
-import '../../features/onboarding/presentation/views/onboarding_view.dart';
 import '../../features/home/presentation/views/home_view.dart';
 import '../../features/projects/presentation/views/project_details_view.dart';
 import '../../features/blogs/presentation/views/blog_details_view.dart';
@@ -15,6 +14,10 @@ import '../../features/auth/presentation/views/otp_verification_view.dart';
 import '../../features/auth/presentation/views/reset_password_view.dart';
 import '../../features/auth/presentation/views/user_type_view.dart';
 import '../../features/auth/presentation/views/interests_view.dart';
+import '../../features/careers/presentation/views/careers_view.dart';
+import '../../features/packages/presentation/views/packages_view.dart';
+import '../../features/settings/presentation/views/privacy_policy_view.dart';
+import '../../features/settings/presentation/views/terms_view.dart';
 import 'routes.dart';
 
 abstract class AppRouter {
@@ -24,10 +27,7 @@ abstract class AppRouter {
         path: Routes.kSplashView,
         builder: (context, state) => const SplashView(),
       ),
-      GoRoute(
-        path: Routes.kOnboardingView,
-        builder: (context, state) => const OnboardingView(),
-      ),
+
       GoRoute(
         path: Routes.kHomeView,
         builder: (context, state) => const HomeView(),
@@ -91,6 +91,22 @@ abstract class AppRouter {
       GoRoute(
         path: Routes.kInterestsView,
         builder: (context, state) => const InterestsView(),
+      ),
+      GoRoute(
+        path: Routes.kPackagesView,
+        builder: (context, state) => const PackagesView(),
+      ),
+      GoRoute(
+        path: Routes.kCareersView,
+        builder: (context, state) => const CareersView(),
+      ),
+      GoRoute(
+        path: Routes.kPrivacyPolicyView,
+        builder: (context, state) => const PrivacyPolicyView(),
+      ),
+      GoRoute(
+        path: Routes.kTermsAndConditionsView,
+        builder: (context, state) => const TermsAndConditionsView(),
       ),
     ],
   );

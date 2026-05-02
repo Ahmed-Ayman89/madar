@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
-import 'package:madar/core/widgets/custom_header_widget.dart';
+import 'package:madar/core/widgets/custom_app_bar.dart';
 import 'package:madar/features/services/presentation/widgets/faq_item_widget.dart';
 import '../widgets/contact_form_widget.dart';
 
@@ -18,72 +18,68 @@ class ContactUsView extends StatelessWidget {
       {'q': 'faq_q4'.tr(context), 'a': 'faq_a4'.tr(context)},
     ];
     return Scaffold(
-      backgroundColor: Colors.white, // Though most will be covered by header
+      appBar: CustomAppBar(
+        title: 'contact_header_category'.tr(context),
+      ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            CustomHeaderWidget(
-              title: 'contact_header_category'.tr(context),
-              titleStyle: AppTextStyle.setStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF259CCB),
-              ),
-              subtitle: 'contact_header_title'.tr(context),
-              subtitleStyle: AppTextStyle.setWhite(
+            SizedBox(height: 24.h),
+            // Subtitle
+            Text(
+              'contact_header_title'.tr(context),
+              style: AppTextStyle.setStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w800,
+                color: Colors.black,
               ),
-              content: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: Text(
-                      'contact_header_description'.tr(context),
-                      style:
-                          AppTextStyle.setWhite(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ).copyWith(
-                            color: Colors.white.withOpacity(0.85),
-                            height: 1.5,
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(height: 40.h),
-                  // Social Media Icons Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildSocialIcon(
-                        Image.asset('assets/photo/facebook.png'),
-                      ), // YouTube
-                      SizedBox(width: 12.w),
-                      _buildSocialIcon(
-                        Image.asset('assets/photo/instagram.png'),
-                      ), // X
-                      SizedBox(width: 12.w),
-                      _buildSocialIcon(
-                        Image.asset('assets/photo/linkedin.png'),
-                      ), // LinkedIn
-                      SizedBox(width: 12.w),
-                      _buildSocialIcon(
-                        Image.asset('assets/photo/new-twitter.png'),
-                      ), // Instagram
-                      SizedBox(width: 12.w),
-                      _buildSocialIcon(
-                        Image.asset('assets/photo/youtube.png'),
-                      ), // Facebook
-                    ],
-                  ),
-                  SizedBox(height: 24.h),
-
-                  // The Contact Form Widget
-                  const ContactFormWidget(),
-                ],
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.h),
+            // Description
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Text(
+                'contact_header_description'.tr(context),
+                style: AppTextStyle.setStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black.withOpacity(0.6),
+                ).copyWith(height: 1.5),
+                textAlign: TextAlign.center,
               ),
             ),
+            SizedBox(height: 30.h),
+            // Social Media Icons Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildSocialIcon(
+                  Image.asset('assets/photo/facebook.png'),
+                ),
+                SizedBox(width: 12.w),
+                _buildSocialIcon(
+                  Image.asset('assets/photo/instagram.png'),
+                ),
+                SizedBox(width: 12.w),
+                _buildSocialIcon(
+                  Image.asset('assets/photo/linkedin.png'),
+                ),
+                SizedBox(width: 12.w),
+                _buildSocialIcon(
+                  Image.asset('assets/photo/new-twitter.png'),
+                ),
+                SizedBox(width: 12.w),
+                _buildSocialIcon(
+                  Image.asset('assets/photo/youtube.png'),
+                ),
+              ],
+            ),
+            SizedBox(height: 24.h),
+
+            // The Contact Form Widget
+            const ContactFormWidget(),
 
             // SECTION: FAQ
             SizedBox(height: 50.h),

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madar/core/helper/app_colors.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
+import 'package:madar/features/settings/presentation/views/settings_details_view.dart';
 
 import '../widgets/more_grid_item.dart';
 import '../widgets/more_list_item.dart';
@@ -10,7 +11,9 @@ import 'package:madar/features/about_us/presentation/views/about_us_view.dart';
 import 'package:madar/features/packages/presentation/views/packages_view.dart';
 import 'package:madar/features/careers/presentation/views/careers_view.dart';
 import 'package:madar/features/blogs/presentation/views/blogs_view.dart';
-import 'package:madar/features/settings/presentation/views/settings_details_view.dart';
+import '../widgets/profile_card_widget.dart';
+import 'package:madar/core/routing/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class MoreView extends StatelessWidget {
   const MoreView({super.key});
@@ -76,8 +79,15 @@ class MoreView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Top Profile Card
+            SizedBox(height: 16.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: const ProfileCardWidget(),
+            ),
+
             // Grid Section
-            SizedBox(height: 30.h),
+            SizedBox(height: 16.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: GridView.builder(
@@ -137,6 +147,12 @@ class MoreView extends StatelessWidget {
                   MoreListItemWidget(
                     title: 'more_terms'.tr(context),
                     imagePath: 'assets/icon/Terms&&condatios.png',
+                    onTap: () => context.push(Routes.kTermsAndConditionsView),
+                  ),
+                  MoreListItemWidget(
+                    title: 'سياسة الخصوصية',
+                    imagePath: 'assets/icon/Terms&&condatios.png',
+                    onTap: () => context.push(Routes.kPrivacyPolicyView),
                   ),
                   MoreListItemWidget(
                     title: 'more_country'.tr(context),

@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:madar/core/helper/app_colors.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
+import 'package:madar/core/widgets/custom_app_bar.dart';
 import 'package:madar/core/widgets/CustomElevatedButton_widget.dart';
-import 'package:madar/core/widgets/custom_header_widget.dart';
 import 'package:madar/features/services/presentation/widgets/tech_field_card.dart';
 import 'package:madar/features/services/presentation/widgets/faq_item_widget.dart';
 
@@ -60,90 +60,75 @@ class AboutUsView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF14244B),
-        elevation: 0,
-        leading: const BackButton(color: Colors.white),
+      appBar: CustomAppBar(
+        title: 'about_header_title'.tr(context),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // SECTION 1: Header with Info and Value Cards OVERLAPPING visually inside the header bounds
-            CustomHeaderWidget(
-              title: 'about_header_title'.tr(context),
-              titleStyle: AppTextStyle.setStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF259CCB),
-              ),
-              subtitle: 'about_header_subtitle'.tr(context),
-              subtitleStyle: AppTextStyle.setWhite(
+            SizedBox(height: 24.h),
+            // Subtitle
+            Text(
+              'about_header_subtitle'.tr(context),
+              style: AppTextStyle.setStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
+                color: Colors.black,
               ),
-              content: Column(
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.h),
+            // Description
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Text(
+                'about_header_desc'.tr(context),
+                style: AppTextStyle.setStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black.withOpacity(0.6),
+                ).copyWith(height: 1.5),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            CustomElevatedButton(
+              onPressed: () {},
+              text: 'about_header_btn'.tr(context),
+            ),
+            SizedBox(height: 40.h),
+            // The 3 cards
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: Text(
-                      'about_header_desc'.tr(context),
-                      style:
-                          AppTextStyle.setWhite(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ).copyWith(
-                            color: Colors.white.withOpacity(0.85),
-                            height: 1.5,
-                          ),
-                      textAlign: TextAlign.center,
+                  Expanded(
+                    child: AboutUsValueCard(
+                      title: 'about_val_vision_title'.tr(context),
+                      description: 'about_val_vision_desc'.tr(context),
+                      icon: Icons.lightbulb_circle,
                     ),
                   ),
-                  SizedBox(height: 30.h),
-                  CustomElevatedButton(
-                    onPressed: () {},
-                    text: 'about_header_btn'.tr(context),
-                    // backgroundColor: const Color(0xFF259CCB),
-                    // textColor: Colors.white,
-                    // width: 200.w,
-                    // height: 48.h,
-                    // isStroked: false,
-                  ),
-                  SizedBox(height: 40.h),
-                  // The 3 overlapping cards
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: AboutUsValueCard(
-                            title: 'about_val_vision_title'.tr(context),
-                            description: 'about_val_vision_desc'.tr(context),
-                            icon: Icons.lightbulb_circle,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: AboutUsValueCard(
-                            title: 'about_val_mission_title'.tr(context),
-                            description: 'about_val_mission_desc'.tr(context),
-                            icon: Icons.flag,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: AboutUsValueCard(
-                            title: 'about_val_goals_title'.tr(context),
-                            description: 'about_val_goals_desc'.tr(context),
-                            icon: Icons.track_changes,
-                          ),
-                        ),
-                      ],
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: AboutUsValueCard(
+                      title: 'about_val_mission_title'.tr(context),
+                      description: 'about_val_mission_desc'.tr(context),
+                      icon: Icons.flag,
                     ),
                   ),
-                  SizedBox(height: 40.h),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: AboutUsValueCard(
+                      title: 'about_val_goals_title'.tr(context),
+                      description: 'about_val_goals_desc'.tr(context),
+                      icon: Icons.track_changes,
+                    ),
+                  ),
                 ],
               ),
             ),
+            SizedBox(height: 20.h),
 
             // SECTION 2: What Distinguishes Us
             SizedBox(height: 60.h),

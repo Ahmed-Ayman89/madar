@@ -14,5 +14,8 @@ abstract class Routes {
   static const String kResetPasswordView = '/resetPassword';
   static const String kUserTypeView = '/userType';
   static const String kInterestsView = '/interests';
+  static const String kPackagesView = '/PackagesView';
+  static const String kCareersView = '/careers';
+  static const String kPrivacyPolicyView = '/privacyPolicy';
+  static const String kTermsAndConditionsView = '/termsAndConditions';
 }
-

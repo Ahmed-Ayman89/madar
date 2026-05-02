@@ -19,33 +19,50 @@ class WorkProjectCard extends StatelessWidget {
     bool isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Container(
-      width: 343.w,
-      height: 153.h,
+      width: 274.w,
+      height: 332.h,
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFF2F2F2), width: 1),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFD9D9D9), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 8,
+            color: const Color(0x1A000000),
+            blurRadius: 12,
             offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
         child: InkWell(
           onTap: () {
             context.push(Routes.kProjectDetailsView, extra: project.id);
           },
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Content (Now on Left in LTR)
+              // Project Image (Top)
+              Container(
+                width: double.infinity,
+                height: 160.h,
+                margin: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: CustomNetworkImage(
+                    imageUrl: project.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              // Content (Bottom)
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
+                    horizontal: 16.w,
                     vertical: 12.h,
                   ),
                   child: Column(
@@ -53,21 +70,16 @@ class WorkProjectCard extends StatelessWidget {
                     children: [
                       // Project Logo
                       if (project.logoUrl != null)
-                        Align(
-                          alignment: isRtl
-                              ? Alignment.topRight
-                              : Alignment.topLeft,
-                          child: CustomNetworkImage(
-                            imageUrl: project.logoUrl!,
-                            height: 25.h,
-                            fit: BoxFit.contain,
-                          ),
+                        CustomNetworkImage(
+                          imageUrl: project.logoUrl!,
+                          height: 25.h,
+                          fit: BoxFit.contain,
                         ),
-                      const Spacer(),
+                      SizedBox(height: 8.h),
                       Text(
                         project.title,
                         style: AppTextStyle.setStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xFF182D62),
                         ),
@@ -78,7 +90,7 @@ class WorkProjectCard extends StatelessWidget {
                       Text(
                         project.description,
                         style: AppTextStyle.setStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: FontWeight.w400,
                           color: AppColors.n300,
                         ),
@@ -89,13 +101,13 @@ class WorkProjectCard extends StatelessWidget {
                       // Learn More Link
                       Row(
                         mainAxisAlignment: isRtl
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.end,
                         children: [
                           Text(
                             'learn_more'.tr(context),
                             style: AppTextStyle.setStyle(
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFF259CCB),
                             ),
@@ -103,28 +115,12 @@ class WorkProjectCard extends StatelessWidget {
                           SizedBox(width: 4.w),
                           Icon(
                             isRtl ? Icons.arrow_back : Icons.arrow_forward,
-                            size: 14,
+                            size: 16,
                             color: const Color(0xFF259CCB),
                           ),
                         ],
                       ),
                     ],
-                  ),
-                ),
-              ),
-              // Project Image (Now on Right in LTR)
-              Container(
-                width: 140.w,
-                height: double.infinity,
-                margin: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: CustomNetworkImage(
-                    imageUrl: project.imageUrl,
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),

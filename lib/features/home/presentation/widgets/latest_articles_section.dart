@@ -17,27 +17,6 @@ class LatestArticlesSection extends StatefulWidget {
 }
 
 class _LatestArticlesSectionState extends State<LatestArticlesSection> {
-  final ScrollController _scrollController = ScrollController();
-
-  void _scroll(bool forward) {
-    double cardWidthWithSpacing = 220.w + 16.w;
-    double targetOffset = forward
-        ? _scrollController.offset + cardWidthWithSpacing
-        : _scrollController.offset - cardWidthWithSpacing;
-
-    _scrollController.animateTo(
-      targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,26 +24,32 @@ class _LatestArticlesSectionState extends State<LatestArticlesSection> {
         // Header
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'articles_category'.tr(context),
+                'أحدث المقالات',
                 style: AppTextStyle.setStyle(
-                  fontSize: 14,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF259CCB),
+                  color: AppColors.black,
                 ),
               ),
-              SizedBox(height: 8.h),
-              Text(
-                'articles_description'.tr(context),
-                style: AppTextStyle.setStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.n900,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const BlogsView()),
+                  );
+                },
+                child: Text(
+                  'عرض الكل',
+                  style: AppTextStyle.setStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF259CCB),
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -97,127 +82,27 @@ class _LatestArticlesSectionState extends State<LatestArticlesSection> {
                   child: Center(child: Text('no_blogs_found'.tr(context))),
                 );
               }
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Horizontal Scroll
-                  SingleChildScrollView(
-                    controller: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    clipBehavior: Clip.none,
-                    padding: EdgeInsets.symmetric(horizontal: 40.w),
-                    child: Row(
-                      children: blogsState.blogs.take(5).map((blog) {
-                        return Padding(
-                          padding: EdgeInsetsDirectional.only(end: 16.w),
-                          child: ArticleCard(blog: blog),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  // Left Arrow
-                  Positioned(
-                    left: 10.w,
-                    child: _buildArrow(
-                      Icons.arrow_forward_ios,
-                      () => _scroll(true),
-                    ),
-                  ),
-                  // Right Arrow
-                  Positioned(
-                    right: 10.w,
-                    child: _buildArrow(
-                      Icons.arrow_back_ios_new,
-                      () => _scroll(false),
-                    ),
-                  ),
-                ],
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.none,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: blogsState.blogs.take(5).map((blog) {
+                    return Padding(
+                      padding: EdgeInsetsDirectional.only(end: 16.w),
+                      child: ArticleCard(blog: blog),
+                    );
+                  }).toList(),
+                ),
               );
             }
             return const SizedBox.shrink();
           },
         ),
 
-        SizedBox(height: 30.h),
-
-        // Show All Button
-        Center(
-          child: SizedBox(
-            width: 120.w,
-            height: 33.h,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const BlogsView()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF259CCB),
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(68.r),
-                ),
-                elevation: 4,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'show_all'.tr(context),
-                    style: AppTextStyle.setStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Icon(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? Icons.arrow_forward_ios
-                        : Icons.arrow_back_ios,
-                    size: 10,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        SizedBox(height: 10.h),
       ],
     );
   }
 
-  Widget _buildArrow(IconData icon, VoidCallback onTap) {
-    return Container(
-      width: 32.w,
-      height: 32.w,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(50.r),
-          child: Center(
-            child: Icon(
-              icon,
-              size: 14,
-              color: const Color(0xFF9E9E9E),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

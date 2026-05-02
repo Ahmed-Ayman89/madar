@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
 import 'package:madar/core/localization/locale_cubit.dart';
-import 'package:madar/core/widgets/custom_header_widget.dart';
+import 'package:madar/core/widgets/custom_app_bar.dart';
 import 'package:madar/core/network/api_helper.dart';
 import 'package:madar/features/contact_us/presentation/views/contact_us_view.dart';
 
@@ -29,84 +29,69 @@ class BlogsView extends StatelessWidget {
         )..getBlogs(lang: lang);
       },
       child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'blog_header_title'.tr(context),
+        ),
         backgroundColor: const Color(0xffFFFFFF),
         body: BlocBuilder<BlogCubit, BlogState>(
           builder: (context, state) {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  // SECTION 1: Header
-                  CustomHeaderWidget(
-                    title: 'blog_header_title'.tr(context),
-                    titleStyle: AppTextStyle.setWhite(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
+                  SizedBox(height: 24.h),
+                  // Header content moved to body
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Text(
+                      'blog_header_desc'.tr(context),
+                      style: AppTextStyle.setStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black.withOpacity(0.6),
+                      ).copyWith(height: 1.5),
+                      textAlign: TextAlign.center,
                     ),
-                    subtitle: 'blog_header_subtitle'.tr(context),
-                    subtitleStyle: AppTextStyle.setStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF259CCB),
+                  ),
+                  SizedBox(height: 20.h),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ContactUsView(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF259CCB),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24.r),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30.w,
+                        vertical: 12.h,
+                      ),
                     ),
-                    content: Column(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: Text(
-                            'blog_header_desc'.tr(context),
-                            style: AppTextStyle.setWhite(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ).copyWith(
-                              color: Colors.white.withOpacity(0.85),
-                              height: 1.5,
-                            ),
-                            textAlign: TextAlign.center,
+                        const Icon(
+                          Icons.arrow_back_ios,
+                          size: 14,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'blog_contact_us'.tr(context),
+                          style: AppTextStyle.setWhite(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 30.h),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ContactUsView(),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF259CCB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.r),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30.w,
-                              vertical: 12.h,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.arrow_back_ios,
-                                size: 14,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                'blog_contact_us'.tr(context),
-                                style: AppTextStyle.setWhite(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 40.h),
                       ],
                     ),
                   ),
+                  SizedBox(height: 40.h),
 
                   // SECTION 2: Blog Intro
                   const BlogIntroSection(),

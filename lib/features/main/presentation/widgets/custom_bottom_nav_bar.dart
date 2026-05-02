@@ -91,7 +91,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                     _buildItem(
                       4,
                       'nav_more'.tr(context),
-                      'assets/icon/building.svg',
+                      'assets/icon/profile.svg',
                     ), // Placeholder icon for 'More'
                   ],
                 ),

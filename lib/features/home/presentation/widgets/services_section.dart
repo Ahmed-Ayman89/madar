@@ -46,8 +46,8 @@ class ServicesSection extends StatelessWidget {
                     mainAxisSpacing: 10.h,
                     childAspectRatio: 166 / 156,
                   ),
-                  itemCount: state.services.length > 6
-                      ? 6
+                  itemCount: state.services.length > 4
+                      ? 4
                       : state.services.length,
                   itemBuilder: (context, index) {
                     return ServiceCard(service: state.services[index]);

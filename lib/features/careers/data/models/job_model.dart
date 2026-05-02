@@ -16,18 +16,24 @@ class JobModel extends JobEntity {
   });
 
   factory JobModel.fromJson(Map<String, dynamic> json, {String lang = 'en'}) {
-    // Choose localized fields based on lang
-    final String requirements = lang == 'ar' 
-        ? (json['requirementsAr'] ?? json['requirements'] ?? '') 
-        : (json['requirements'] ?? '');
-    
-    final String responsibilities = lang == 'ar'
-        ? (json['responsibilitiesAr'] ?? json['responsibilities'] ?? '')
-        : (json['responsibilities'] ?? '');
+    final dynamic rawRequirements = lang == 'ar'
+        ? (json['requirementsAr'] ?? json['requirements'])
+        : json['requirements'];
+    final String requirements = rawRequirements is List
+        ? rawRequirements.join('\n')
+        : (rawRequirements ?? '').toString();
 
-    final String location = lang == 'ar'
-        ? (json['locationAr'] ?? json['location'] ?? '')
-        : (json['location'] ?? '');
+    final dynamic rawResponsibilities = lang == 'ar'
+        ? (json['responsibilitiesAr'] ?? json['responsibilities'])
+        : json['responsibilities'];
+    final String responsibilities = rawResponsibilities is List
+        ? rawResponsibilities.join('\n')
+        : (rawResponsibilities ?? '').toString();
+
+    final dynamic rawLocation = lang == 'ar'
+        ? (json['locationAr'] ?? json['location'])
+        : json['location'];
+    final String location = (rawLocation ?? '').toString();
 
     return JobModel(
       id: json['_id'] ?? '',

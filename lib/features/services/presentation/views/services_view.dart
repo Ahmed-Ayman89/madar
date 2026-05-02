@@ -5,7 +5,7 @@ import 'package:madar/core/helper/app_colors.dart';
 import 'package:madar/core/helper/app_text_style.dart';
 import 'package:madar/core/localization/app_localizations.dart';
 import 'package:madar/core/localization/locale_cubit.dart';
-import 'package:madar/core/widgets/custom_header_widget.dart';
+import 'package:madar/core/widgets/custom_app_bar.dart';
 import 'package:madar/core/network/api_helper.dart';
 import '../widgets/service_grid_item.dart';
 import '../widgets/tech_field_card.dart';
@@ -27,84 +27,79 @@ class ServicesView extends StatelessWidget {
           ServicesRepositoryImpl(ServicesRemoteDataSource(APIHelper())),
         )..getServices(lang: lang);
       },
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        body: BlocBuilder<ServicesCubit, ServicesState>(
-          builder: (context, state) {
-            // Data for technical fields (static for now)
-            final List<Map<String, dynamic>> techFields = [
-              {
-                'title': 'tech_frontend_title'.tr(context),
-                'desc': 'tech_frontend_desc'.tr(context),
-                'icon': Icons.code,
-              },
-              {
-                'title': 'tech_backend_title'.tr(context),
-                'desc': 'tech_backend_desc'.tr(context),
-                'icon': Icons.storage,
-              },
-              {
-                'title': 'tech_flutter_title'.tr(context),
-                'desc': 'tech_flutter_desc'.tr(context),
-                'icon': Icons.flutter_dash,
-              },
-              {
-                'title': 'tech_uiux_title'.tr(context),
-                'desc': 'tech_uiux_desc'.tr(context),
-                'icon': Icons.design_services,
-              },
-            ];
+      child: BlocBuilder<ServicesCubit, ServicesState>(
+        builder: (context, state) {
+          // Data for technical fields (static for now)
+          final List<Map<String, dynamic>> techFields = [
+            {
+              'title': 'tech_frontend_title'.tr(context),
+              'desc': 'tech_frontend_desc'.tr(context),
+              'icon': Icons.code,
+            },
+            {
+              'title': 'tech_backend_title'.tr(context),
+              'desc': 'tech_backend_desc'.tr(context),
+              'icon': Icons.storage,
+            },
+            {
+              'title': 'tech_flutter_title'.tr(context),
+              'desc': 'tech_flutter_desc'.tr(context),
+              'icon': Icons.flutter_dash,
+            },
+            {
+              'title': 'tech_uiux_title'.tr(context),
+              'desc': 'tech_uiux_desc'.tr(context),
+              'icon': Icons.design_services,
+            },
+          ];
 
-            // FAQ data (static for now)
-            final List<Map<String, String>> faqItems = [
-              {'q': 'faq_q1'.tr(context), 'a': 'faq_a1'.tr(context)},
-              {'q': 'faq_q2'.tr(context), 'a': 'faq_a2'.tr(context)},
-              {'q': 'faq_q3'.tr(context), 'a': 'faq_a3'.tr(context)},
-              {'q': 'faq_q4'.tr(context), 'a': 'faq_a4'.tr(context)},
-            ];
+          // FAQ data (static for now)
+          final List<Map<String, String>> faqItems = [
+            {'q': 'faq_q1'.tr(context), 'a': 'faq_a1'.tr(context)},
+            {'q': 'faq_q2'.tr(context), 'a': 'faq_a2'.tr(context)},
+            {'q': 'faq_q3'.tr(context), 'a': 'faq_a3'.tr(context)},
+            {'q': 'faq_q4'.tr(context), 'a': 'faq_a4'.tr(context)},
+          ];
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  // SECTION 1: Services Header & Grid
-                  CustomHeaderWidget(
-                    title: 'services_page_title'.tr(context),
-                    titleStyle: AppTextStyle.setStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF259CCB),
+          return Scaffold(
+              appBar: CustomAppBar(
+                title: 'services_page_title'.tr(context),
+              ),
+              backgroundColor: AppColors.white,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 24.h),
+                    // Subtitle
+                    Text(
+                      'services_page_subtitle'.tr(context),
+                      style: AppTextStyle.setStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    subtitle: 'services_page_subtitle'.tr(context),
-                    subtitleStyle: AppTextStyle.setWhite(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
+                    SizedBox(height: 16.h),
+                    // Description
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Text(
+                        'services_page_description'.tr(context),
+                        style: AppTextStyle.setStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black.withOpacity(0.6),
+                        ).copyWith(height: 1.5),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    content: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: Text(
-                            'services_page_description'.tr(context),
-                            style:
-                                AppTextStyle.setWhite(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                ).copyWith(
-                                  color: Colors.white.withOpacity(0.85),
-                                  height: 1.5,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(height: 45.h),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: _buildServicesGrid(state, context),
-                        ),
-                        SizedBox(height: 50.h),
-                      ],
+                    SizedBox(height: 30.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: _buildServicesGrid(state, context),
                     ),
-                  ),
+                    SizedBox(height: 50.h),
 
                   // SECTION 2: Technical Fields
                   SizedBox(height: 60.h),
@@ -220,9 +215,9 @@ class ServicesView extends StatelessWidget {
                   SizedBox(height: 100.h),
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
