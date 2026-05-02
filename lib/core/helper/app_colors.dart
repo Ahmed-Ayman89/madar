@@ -60,5 +60,11 @@ class AppColors {
   // ================== BRAND COLORS ==================
   static const Color brandPrimary = primary500;
   static const Color brandSecondary = bgBlue500;
+
+  // ================== AUTH COLORS ==================
+  static const Color textFieldBorder = Color(0xFFEDF1F3);
+  static const Color textFieldShadow = Color(0x3DE4E5E7);
+  static const Color buttonShadow = Color(0x7A259CCB);
+  static const Color primaryBlue = Color(0xFF259CCB);
 }
 

@@ -14,8 +14,9 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _orbitController;
   final List<Particle> _particles = [];
   final Random _random = Random();
   bool _showLogo = false;
@@ -27,6 +28,11 @@ class _SplashViewState extends State<SplashView>
       vsync: this,
       duration: const Duration(seconds: 4),
     )..addListener(_updateParticles);
+
+    _orbitController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat();
 
     _controller.forward();
 
@@ -70,6 +76,7 @@ class _SplashViewState extends State<SplashView>
   @override
   void dispose() {
     _controller.dispose();
+    _orbitController.dispose();
     super.dispose();
   }
 
@@ -90,39 +97,84 @@ class _SplashViewState extends State<SplashView>
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 1000),
               opacity: _showLogo ? 1.0 : 0.0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary500.withValues(alpha: 0.5),
-                          blurRadius: 30,
-                          spreadRadius: 10,
+                  // Orbiting Star
+                  AnimatedBuilder(
+                    animation: _orbitController,
+                    builder: (context, child) {
+                      double angle = _orbitController.value * 2 * pi;
+                      double radius = 100.0;
+                      return Transform.translate(
+                        offset: Offset(
+                          cos(angle) * radius,
+                          sin(angle) * radius,
                         ),
-                      ],
-                    ),
-                    child: Image.asset(
-                      'assets/photo/madar_logo.png',
-                      fit: BoxFit.contain,
-                    ),
+                        child: Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary300,
+                                blurRadius: 15,
+                                spreadRadius: 5,
+                              ),
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 5,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.star,
+                            color: AppColors.primary500,
+                            size: 10,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'MADAR',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 4,
-                      shadows: [
-                        Shadow(color: AppColors.primary500, blurRadius: 10),
-                      ],
-                    ),
+                  // Logo and Text
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary500.withValues(alpha: 0.5),
+                              blurRadius: 30,
+                              spreadRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          'assets/photo/madar_logo.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'MADAR',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 4,
+                          shadows: [
+                            Shadow(color: AppColors.primary500, blurRadius: 10),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

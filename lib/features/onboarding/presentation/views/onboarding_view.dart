@@ -27,7 +27,7 @@ class _OnboardingViewState extends State<OnboardingView> {
   }
 
   void _navigateToHome() {
-    context.go(Routes.kMainView);
+    context.go(Routes.kSignUpView);
   }
 
   void _nextPage(int itemsCount) {

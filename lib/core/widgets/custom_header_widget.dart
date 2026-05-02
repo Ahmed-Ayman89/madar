@@ -8,7 +8,7 @@ import 'package:madar/core/localization/locale_cubit.dart';
 class CustomHeaderWidget extends StatelessWidget {
   final String title;
   final String subtitle;
-  final Widget content;
+  final Widget? content;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
 
@@ -122,24 +122,28 @@ class CustomHeaderWidget extends StatelessWidget {
                 // SECTION 2: Typography
                 Text(
                   title,
-                  style: titleStyle ?? AppTextStyle.setWhite(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style:
+                      titleStyle ??
+                      AppTextStyle.setWhite(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
                 SizedBox(height: 16.h),
                 Text(
                   subtitle,
-                  style: subtitleStyle ?? AppTextStyle.setWhite(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style:
+                      subtitleStyle ??
+                      AppTextStyle.setWhite(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 30.h),
 
                 // SECTION 3: Dynamic Content
-                content,
+                content ?? const SizedBox.shrink(),
               ],
             ),
           ),

@@ -24,9 +24,8 @@ class JobDetailsView extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         final lang = context.read<LocaleCubit>().state.locale.languageCode;
-        return JobCubit(
-          JobRepositoryImpl(JobRemoteDataSource(APIHelper())),
-        )..getJobDetails(jobId, lang: lang);
+        return JobCubit(JobRepositoryImpl(JobRemoteDataSource(APIHelper())))
+          ..getJobDetails(jobId, lang: lang);
       },
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -96,16 +95,7 @@ class JobDetailsView extends StatelessWidget {
         fontWeight: FontWeight.w600,
         color: const Color(0xFF259CCB),
       ),
-      content: Padding(
-        padding: EdgeInsets.only(bottom: 40.h),
-        child: Text(
-          '${'salary_range'.tr(context)}: ${job.salaryRange}',
-          style: AppTextStyle.setWhite(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+      content: null,
     );
   }
 

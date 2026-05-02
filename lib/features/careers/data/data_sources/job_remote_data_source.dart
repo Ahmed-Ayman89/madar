@@ -45,7 +45,7 @@ class JobRemoteDataSource {
   Future<ApiResponse<String>> uploadCv(File file) async {
     return await _apiHelper.postRequest<String>(
       endPoint: EndPoints.uploadCv,
-      data: {'file': await MultipartFile.fromFile(file.path)},
+      data: {'cv': await MultipartFile.fromFile(file.path)},
       isFormData: true,
       isAuthorized: false,
       parser: (json) => json['data']['url'],
